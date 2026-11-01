@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101827">
+<title>НикитОС — рабочий стол</title>
+<style>
+:root{--bg:#101827;--panel:rgba(22,34,54,.88);--line:rgba(255,255,255,.12);--text:#f4f7ff;--muted:#aab7ca;--accent:#6d9cff}
+*{box-sizing:border-box}body{margin:0;color:var(--text);font:15px system-ui,Arial,sans-serif;min-height:100vh;overflow:hidden;background:radial-gradient(circle at 18% 20%,#284e79 0,transparent 34%),radial-gradient(circle at 82% 75%,#42356e 0,transparent 36%),linear-gradient(135deg,#0c1728,#172b45 55%,#111827)}
+button{font:inherit;color:inherit;border:1px solid var(--line);background:#ffffff12;border-radius:12px;padding:10px 14px;cursor:pointer}button:hover{background:#ffffff24}button:focus-visible{outline:2px solid var(--accent)}
+.desktop{height:100dvh;padding:22px 18px 82px}.icons{display:grid;grid-template-columns:repeat(1,82px);gap:12px;width:90px}.appicon{width:78px;min-height:78px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-shadow:0 2px 5px #000}.emoji{font-size:34px}.appicon span:last-child{font-size:12px}
+.taskbar{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);width:min(720px,calc(100% - 24px));height:58px;padding:7px 10px;display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:19px;background:rgba(10,18,31,.76);backdrop-filter:blur(22px);box-shadow:0 12px 45px #0005}
+.start{font-size:22px;width:46px;height:44px;padding:0}.tasksearch{flex:1;min-width:0;text-align:left;color:var(--muted)}.tray{margin-left:auto;text-align:right;font-size:12px;white-space:nowrap;line-height:1.4}
+.window{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(760px,calc(100% - 24px));height:min(560px,calc(100dvh - 120px));background:var(--panel);backdrop-filter:blur(24px);border:1px solid var(--line);border-radius:20px;box-shadow:0 25px 90px #0008;display:none;overflow:hidden}
+.window.show{display:flex;flex-direction:column}.titlebar{height:52px;display:flex;align-items:center;padding:0 14px;border-bottom:1px solid var(--line);gap:10px}.titlebar strong{flex:1}.close{padding:6px 11px}.content{padding:20px;overflow:auto;flex:1}
+.startmenu{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);width:min(430px,calc(100% - 24px));padding:18px;background:var(--panel);backdrop-filter:blur(24px);border:1px solid var(--line);border-radius:20px;display:none;box-shadow:0 20px 70px #0008}.startmenu.show{display:block}.startgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.startgrid button{min-height:82px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}.muted{color:var(--muted)}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}.card{padding:16px;border:1px solid var(--line);border-radius:16px;background:#ffffff0b}.card b{display:block;font-size:24px;margin-bottom:4px}.field{width:100%;padding:12px;border-radius:11px;border:1px solid var(--line);background:#07111f;color:white;margin:7px 0 12px}.note{min-height:170px;resize:vertical}.browserbar{display:flex;gap:8px}.browserbar input{flex:1;min-width:0}.wallpapers{display:flex;gap:10px;flex-wrap:wrap}.wallpapers button{min-width:100px}.toast{position:fixed;right:16px;top:16px;padding:12px 16px;background:#15243a;border:1px solid var(--line);border-radius:12px;display:none}.toast.show{display:block}
+@media(max-width:480px){.desktop{padding:14px 10px 80px}.window{height:calc(100dvh - 112px);top:48%}.tasksearch{font-size:13px}.tray{font-size:10px}.content{padding:15px}}
+</style>
+</head>
+<body>
+<main class="desktop">
+ <div class="icons">
+  <button class="appicon" onclick="openApp('files')"><span class="emoji">📁</span><span>Файлы</span></button>
+  <button class="appicon" onclick="openApp('notes')"><span class="emoji">📝</span><span>Заметки</span></button>
+  <button class="appicon" onclick="openApp('browser')"><span class="emoji">🌐</span><span>Браузер</span></button>
+  <button class="appicon" onclick="openApp('settings')"><span class="emoji">⚙️</span><span>Настройки</span></button>
+ </div>
+</main>
+<div class="startmenu" id="startmenu">
+ <div style="display:flex;align-items:center;justify-content:space-between"><b>НикитОС</b><span class="muted">Меню приложений</span></div>
+ <div class="startgrid">
+  <button onclick="openApp('files');toggleStart()">📁<span>Файлы</span></button>
+  <button onclick="openApp('notes');toggleStart()">📝<span>Заметки</span></button>
+  <button onclick="openApp('browser');toggleStart()">🌐<span>Браузер</span></button>
+  <button onclick="openApp('calculator');toggleStart()">🧮<span>Калькулятор</span></button>
+  <button onclick="openApp('settings');toggleStart()">⚙️<span>Настройки</span></button>
+  <button onclick="openApp('about');toggleStart()">💻<span>О системе</span></button>
+ </div>
+</div>
+<div class="taskbar">
+ <button class="start" onclick="toggleStart()" aria-label="Пуск">⊞</button>
+ <button class="tasksearch" onclick="openApp('search')">⌕　Поиск приложений и настроек</button>
+ <div class="tray"><span id="clock">--:--</span><br><span id="date">--.--.----</span></div>
+</div>
+<section class="window" id="window">
+ <header class="titlebar"><span id="winIcon">💻</span><strong id="winTitle">Приложение</strong><button class="close" onclick="closeApp()">✕</button></header>
+ <div class="content" id="winContent"></div>
+</section>
+<div class="toast" id="toast"></div>
+<script>
+const $=id=>document.getElementById(id);
+const win=$('window'),content=$('winContent');
+function toggleStart(){$('startmenu').classList.toggle('show')}
+function closeApp(){win.classList.remove('show')}
+function notify(s){$('toast').textContent=s;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2300)}
+function openApp(app){
+ const data={
+ files:['📁','Файлы',`<h2>Мои файлы</h2><p class="muted">Это демонстрационный файловый раздел НикитОС.</p><div class="cards"><div class="card">📂<br><b>Документы</b><span class="muted">Папка</span></div><div class="card">🖼️<br><b>Изображения</b><span class="muted">Папка</span></div><div class="card">⬇️<br><b>Загрузки</b><span class="muted">Папка</span></div></div>`],
+ notes:['📝','Заметки',`<h2>Быстрые заметки</h2><p class="muted">Текст автоматически сохраняется на этом устройстве.</p><textarea class="field note" id="note" placeholder="Напиши что-нибудь..."></textarea><button onclick="saveNote()">Сохранить</button> <span id="saved" class="muted"></span>`],
+ browser:['🌐','Браузер',`<h2>Быстрый переход</h2><p class="muted">Открой сайт в новой вкладке.</p><form class="browserbar" onsubmit="goSite(event)"><input class="field" id="site" placeholder="https://example.com"><button>Перейти ↗</button></form><div class="cards"><button onclick="visit('https://www.wikipedia.org')">Wikipedia</button><button onclick="visit('https://github.com')">GitHub</button><button onclick="visit('https://www.youtube.com')">YouTube</button></div>`],
+ settings:['⚙️','Настройки',`<h2>Персонализация</h2><p class="muted">Выбери оформление рабочего стола.</p><div class="wallpapers"><button onclick="wall(0)">🌌 Космос</button><button onclick="wall(1)">🌊 Океан</button><button onclick="wall(2)">🌅 Закат</button></div><hr style="border-color:var(--line);margin:22px 0"><p>Версия системы: <b>2.0</b></p><p class="muted">Настройки хранятся только в текущем браузере.</p>`],
+ calculator:['🧮','Калькулятор',`<h2>Калькулятор</h2><input class="field" id="calc" placeholder="Например: 12*(5+2)"><button onclick="calculate()">Посчитать</button><h3 id="result"></h3><p class="muted">Поддерживаются числа и операции + − × ÷ скобки.</p>`],
+ about:['💻','О НикитОС',`<div style="text-align:center;padding:22px"><div style="font-size:64px">⊞</div><h1>НикитОС</h1><p class="muted">Твоя мини-операционная система в одном HTML-файле.</p><div class="cards"><div class="card"><b>2.0</b>Версия</div><div class="card"><b>HTML</b>Технология</div><div class="card"><b>📱 ПК</b>Адаптивность</div></div></div>`],
+ search:['⌕','Поиск',`<h2>Поиск по приложениям</h2><input class="field" id="find" placeholder="Например, заметки" oninput="searchApps()"><div id="found" class="cards"></div>`]
+ };
+ const d=data[app]||data.about;$('winIcon').textContent=d[0];$('winTitle').textContent=d[1];content.innerHTML=d[2];win.classList.add('show');
+ if(app==='notes')$('note').value=localStorage.getItem('nikitos-note')||'';
+}
+function saveNote(){localStorage.setItem('nikitos-note',$('note').value);$('saved').textContent='Сохранено ✓'}
+function visit(url){window.open(url,'_blank','noopener')}
+function goSite(e){e.preventDefault();let v=$('site').value.trim();if(!v)return;if(!/^https?:\/\//i.test(v))v='https://'+v;visit(v)}
+function calculate(){try{let s=$('calc').value;if(!/^[0-9+\-*/().\s]+$/.test(s))throw 0;let n=Function('"use strict";return ('+s+')')();$('result').textContent=Number.isFinite(n)?'= '+n:'Ошибка'}catch(e){$('result').textContent='Проверь выражение'}}
+function wall(n){let b=document.body;b.style.background=n===0?'radial-gradient(circle at 20% 20%,#284e79,transparent 38%),linear-gradient(135deg,#0c1728,#172b45)':n===1?'linear-gradient(135deg,#075985,#0e7490,#082f49)':'linear-gradient(135deg,#7c2d12,#c2410c,#312e81)';notify('Обои изменены')}
+function searchApps(){let q=$('find').value.toLowerCase(),apps=[['📁','Файлы','files'],['📝','Заметки','notes'],['🌐','Браузер','browser'],['🧮','Калькулятор','calculator'],['⚙️','Настройки','settings'],['💻','О системе','about']];$('found').innerHTML=apps.filter(a=>a[1].toLowerCase().includes(q)).map(a=>`<button onclick="openApp('${a[2]}')">${a[0]} ${a[1]}</button>`).join('')||'<p class="muted">Ничего не найдено</p>'}
+function tick(){let d=new Date();$('clock').textContent=d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});$('date').textContent=d.toLocaleDateString('ru-RU')}
+tick();setInterval(tick,1000);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeApp();$('startmenu').classList.remove('show')}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openApp('search')}});
+</script>
+</body>
+</html>
