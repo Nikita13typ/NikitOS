@@ -2,80 +2,476 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#101827">
-<title>НикитОС — рабочий стол</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>НикитОС 3.0 — твой цифровой мир</title>
 <style>
-:root{--bg:#101827;--panel:rgba(22,34,54,.88);--line:rgba(255,255,255,.12);--text:#f4f7ff;--muted:#aab7ca;--accent:#6d9cff}
-*{box-sizing:border-box}body{margin:0;color:var(--text);font:15px system-ui,Arial,sans-serif;min-height:100vh;overflow:hidden;background:radial-gradient(circle at 18% 20%,#284e79 0,transparent 34%),radial-gradient(circle at 82% 75%,#42356e 0,transparent 36%),linear-gradient(135deg,#0c1728,#172b45 55%,#111827)}
-button{font:inherit;color:inherit;border:1px solid var(--line);background:#ffffff12;border-radius:12px;padding:10px 14px;cursor:pointer}button:hover{background:#ffffff24}button:focus-visible{outline:2px solid var(--accent)}
-.desktop{height:100dvh;padding:22px 18px 82px}.icons{display:grid;grid-template-columns:repeat(1,82px);gap:12px;width:90px}.appicon{width:78px;min-height:78px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-shadow:0 2px 5px #000}.emoji{font-size:34px}.appicon span:last-child{font-size:12px}
-.taskbar{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);width:min(720px,calc(100% - 24px));height:58px;padding:7px 10px;display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:19px;background:rgba(10,18,31,.76);backdrop-filter:blur(22px);box-shadow:0 12px 45px #0005}
-.start{font-size:22px;width:46px;height:44px;padding:0}.tasksearch{flex:1;min-width:0;text-align:left;color:var(--muted)}.tray{margin-left:auto;text-align:right;font-size:12px;white-space:nowrap;line-height:1.4}
-.window{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(760px,calc(100% - 24px));height:min(560px,calc(100dvh - 120px));background:var(--panel);backdrop-filter:blur(24px);border:1px solid var(--line);border-radius:20px;box-shadow:0 25px 90px #0008;display:none;overflow:hidden}
-.window.show{display:flex;flex-direction:column}.titlebar{height:52px;display:flex;align-items:center;padding:0 14px;border-bottom:1px solid var(--line);gap:10px}.titlebar strong{flex:1}.close{padding:6px 11px}.content{padding:20px;overflow:auto;flex:1}
-.startmenu{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);width:min(430px,calc(100% - 24px));padding:18px;background:var(--panel);backdrop-filter:blur(24px);border:1px solid var(--line);border-radius:20px;display:none;box-shadow:0 20px 70px #0008}.startmenu.show{display:block}.startgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.startgrid button{min-height:82px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}.muted{color:var(--muted)}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}.card{padding:16px;border:1px solid var(--line);border-radius:16px;background:#ffffff0b}.card b{display:block;font-size:24px;margin-bottom:4px}.field{width:100%;padding:12px;border-radius:11px;border:1px solid var(--line);background:#07111f;color:white;margin:7px 0 12px}.note{min-height:170px;resize:vertical}.browserbar{display:flex;gap:8px}.browserbar input{flex:1;min-width:0}.wallpapers{display:flex;gap:10px;flex-wrap:wrap}.wallpapers button{min-width:100px}.toast{position:fixed;right:16px;top:16px;padding:12px 16px;background:#15243a;border:1px solid var(--line);border-radius:12px;display:none}.toast.show{display:block}
-@media(max-width:480px){.desktop{padding:14px 10px 80px}.window{height:calc(100dvh - 112px);top:48%}.tasksearch{font-size:13px}.tray{font-size:10px}.content{padding:15px}}
+:root{--accent:#67e8f9;--glass:rgba(18,27,47,.78);--line:rgba(255,255,255,.16);--text:#f8fafc;--muted:#cbd5e1}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);background:#0b1020}
+button,input,textarea{font:inherit}button{cursor:pointer;color:inherit;border:1px solid var(--line);background:rgba(255,255,255,.09);border-radius:12px;padding:9px 12px}button:hover{background:rgba(255,255,255,.17)}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#desktop{position:relative;width:100%;height:100%;background:radial-gradient(ellipse at 20% 20%,#164e63 0%,transparent 42%),radial-gradient(ellipse at 80% 70%,#4338ca 0%,transparent 45%),linear-gradient(135deg,#07111f,#111827 55%,#172554);transition:background .25s}
+#desktop.sunset{background:radial-gradient(ellipse at 20% 20%,#f97316 0%,transparent 40%),radial-gradient(ellipse at 80% 70%,#be185d 0%,transparent 45%),linear-gradient(135deg,#431407,#312e81)}
+#desktop.light{--glass:rgba(245,248,255,.88);--line:rgba(15,23,42,.17);--text:#0f172a;--muted:#334155;background:radial-gradient(ellipse at 20% 20%,#bae6fd 0%,transparent 42%),radial-gradient(ellipse at 80% 70%,#ddd6fe 0%,transparent 45%),linear-gradient(135deg,#eff6ff,#e0e7ff)}
+#desktop.light .window,#desktop.light .panel,#desktop.light #startMenu,#desktop.light #quickPanel{color:#0f172a}
+#desktop.light .window textarea,#desktop.light .window input{color:#0f172a;background:rgba(255,255,255,.8)}
+#desktop.light .taskbar{background:rgba(255,255,255,.62)}
+#topInfo{position:absolute;top:15px;left:18px;font-size:13px;color:var(--muted);text-shadow:0 1px 8px #0005}
+#desktopIcons{display:grid;grid-template-columns:repeat(2,84px);gap:10px;position:absolute;top:60px;left:12px}
+.desktopIcon{width:82px;min-height:78px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border:1px solid transparent;background:transparent;text-align:center;font-size:12px;padding:7px}
+.desktopIcon .emoji{font-size:29px}.desktopIcon:hover{border-color:var(--line);background:#ffffff12}
+#taskbar{position:absolute;bottom:0;left:0;right:0;min-height:62px;padding:8px 12px calc(8px + env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(8,13,27,.72);backdrop-filter:blur(22px);border-top:1px solid var(--line);z-index:100}
+#taskLeft{display:flex;align-items:center;gap:8px;min-width:0}#startBtn{font-weight:800;letter-spacing:.2px;background:linear-gradient(135deg,#0891b2,#4f46e5);border:0}#taskApps{display:flex;gap:6px;overflow:auto}#taskApps button{padding:8px 10px;white-space:nowrap}#clock{font-size:12px;text-align:right;white-space:nowrap;line-height:1.45;color:var(--muted)}
+.panel{position:absolute;z-index:150;background:var(--glass);backdrop-filter:blur(25px);border:1px solid var(--line);border-radius:20px;box-shadow:0 20px 70px #0005;color:var(--text)}
+#startMenu{bottom:76px;left:12px;width:min(360px,calc(100vw - 24px));max-height:calc(100dvh - 100px);padding:16px;display:none;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+#startMenu.open,#quickPanel.open{display:block}.panel h2{font-size:17px;margin:0 0 12px}.search{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:#ffffff12;color:inherit;margin-bottom:12px}
+.appGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;min-width:0}.appTile{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:6px;min-height:76px;min-width:0;width:100%;padding:10px 5px;text-align:center;white-space:normal;overflow-wrap:anywhere;word-break:normal;line-height:1.25;font-size:12px}.appTile span{font-size:24px;line-height:1.1;flex:0 0 auto}
+#quickPanel{right:12px;bottom:76px;width:min(330px,calc(100vw - 24px));padding:16px;display:none}
+.quickGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.quickGrid button{text-align:left;min-height:54px}
+.window{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);width:min(620px,calc(100vw - 24px));height:min(490px,calc(100dvh - 155px));min-height:260px;display:none;flex-direction:column;overflow:hidden;background:var(--glass);backdrop-filter:blur(24px);border:1px solid var(--line);border-radius:18px;box-shadow:0 24px 80px #0006;color:var(--text);z-index:20}
+.window.active{display:flex}.titlebar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 12px;border-bottom:1px solid var(--line);font-weight:700;cursor:grab;touch-action:none;user-select:none}.titlebar:active{cursor:grabbing}.titleBtns{display:flex;gap:5px}.titleBtns button{padding:4px 9px}.close{background:#dc2626aa}.winBody{padding:15px;overflow:auto;flex:1}.muted{color:var(--muted);font-size:13px}.bigClock{font-size:clamp(36px,9vw,64px);font-weight:750;letter-spacing:-2px}.hero{padding:17px;border:1px solid var(--line);border-radius:16px;background:#ffffff0b;margin-bottom:12px}
+textarea,input{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px;background:#ffffff0d;color:var(--text);resize:vertical}textarea{min-height:160px}.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.row>*{flex:1}.calcDisplay{font-size:30px;text-align:right;min-height:56px;margin-bottom:10px}.calcGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.calcGrid button{font-size:18px;padding:14px 4px}.settingsList{display:grid;gap:9px}.settingsList button{text-align:left}.statusBadge{display:inline-block;margin-left:6px;padding:2px 7px;border:1px solid #34d39988;border-radius:999px;color:#a7f3d0;text-shadow:none;font-size:11px}.taskList{display:grid;gap:8px;margin-top:10px}.taskItem{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#ffffff08}.taskItem input[type=checkbox]{width:20px;height:20px;flex:0 0 auto}.taskItem .taskText{flex:1;overflow-wrap:anywhere}.taskItem.done .taskText{text-decoration:line-through;opacity:.6}.taskItem button{padding:5px 9px;flex:0 0 auto}.storeHero{padding:20px;border:1px solid #67e8f955;border-radius:18px;background:linear-gradient(135deg,#0891b233,#7c3aed33,#ec489933);margin-bottom:14px}.storeHero h2{font-size:clamp(22px,4vw,32px);line-height:1.1;margin:7px 0}.storeHero p{margin:8px 0;color:var(--muted)}.storeKicker{font-size:10px;font-weight:900;letter-spacing:2px;color:var(--accent)}.storeStats{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}.storeStats div{padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:#0001;display:flex;flex-direction:column}.storeStats b{font-size:17px}.storeStats span{font-size:11px;color:var(--muted)}.storeTools{display:flex;gap:9px;flex-direction:column;margin:8px 0 14px}.storeCategories{display:flex;gap:7px;overflow-x:auto;padding:2px 0 7px}.storeCat{white-space:nowrap;flex:0 0 auto}.storeCat.selected{background:linear-gradient(135deg,#0891b2,#4f46e5);border-color:transparent}.storeTools select{width:100%;padding:10px;border:1px solid var(--line);border-radius:11px;background:var(--glass);color:inherit}.storeSectionHead{display:flex;align-items:center;justify-content:space-between;gap:8px}.storeSectionHead h3{font-size:17px;margin:8px 0}.storeGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,215px),1fr));gap:10px}.storeCard{display:flex;flex-direction:column;gap:8px;padding:13px;border:1px solid var(--line);border-radius:16px;background:#ffffff08;min-width:0}.storeCardTop{display:flex;align-items:center;gap:10px}.storeIcon{width:48px;height:48px;flex:0 0 48px;display:grid;place-items:center;font-size:27px;border-radius:14px;background:linear-gradient(135deg,#0891b255,#7c3aed55);border:1px solid #ffffff20}.storeCard h4{font-size:14px;margin:0;overflow-wrap:anywhere}.storeMeta{font-size:11px;color:var(--muted);margin-top:3px}.storeCard p{font-size:12px;line-height:1.4;color:var(--muted);margin:0;flex:1}.storeCardActions{display:flex;gap:7px}.storeCardActions button{flex:1;font-size:12px;padding:8px}.storeInstall{background:linear-gradient(135deg,#0891b2,#4f46e5);border:0;font-weight:750}.storeOpen{border-color:#34d39977}.storeNote{font-size:11px;line-height:1.5;color:var(--muted);margin-top:16px;padding:10px;border:1px solid var(--line);border-radius:12px}.miniAppArea{display:grid;gap:12px}.miniAppArea .miniOutput{padding:16px;border:1px solid var(--line);border-radius:14px;background:#ffffff0b;min-height:60px;overflow-wrap:anywhere}.miniAppArea .miniBig{font-size:clamp(28px,8vw,48px);font-weight:800;text-align:center;padding:16px}.miniAppArea .miniActions{display:flex;gap:8px;flex-wrap:wrap}.miniAppArea .miniActions button{flex:1;min-width:110px}.miniAppArea input,.miniAppArea textarea{margin:3px 0}.miniAppArea .miniResult{font-weight:700;color:var(--accent)}
+.toast{position:absolute;left:50%;top:22px;transform:translateX(-50%);background:var(--glass);border:1px solid var(--line);border-radius:14px;padding:10px 14px;z-index:300;box-shadow:0 8px 35px #0005;display:none;max-width:90%;text-align:center}
+#powerOverlay{position:absolute;inset:0;background:#020617;z-index:500;display:none;align-items:center;justify-content:center;text-align:center;padding:25px}#powerOverlay.show{display:flex}
+@media(min-width:700px){#desktopIcons{grid-template-columns:84px;top:70px}#taskbar{justify-content:center}#taskLeft{position:absolute;left:12px}#clock{position:absolute;right:14px}#startMenu{max-height:calc(100dvh - 105px)}}
+@media(max-width:420px){#startMenu{left:8px;width:calc(100vw - 16px);bottom:70px;padding:12px;max-height:calc(100dvh - 88px)}.appGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.appTile{min-height:70px;font-size:13px;padding:10px 8px}.appTile span{font-size:26px}#startMenu .muted{font-size:11px}}
+@media(max-height:430px){.window{height:calc(100dvh - 90px);top:45%}#desktopIcons{top:48px}#taskbar{min-height:50px}#startMenu,#quickPanel{bottom:60px}}
 </style>
 </head>
 <body>
-<main class="desktop">
- <div class="icons">
-  <button class="appicon" onclick="openApp('files')"><span class="emoji">📁</span><span>Файлы</span></button>
-  <button class="appicon" onclick="openApp('notes')"><span class="emoji">📝</span><span>Заметки</span></button>
-  <button class="appicon" onclick="openApp('browser')"><span class="emoji">🌐</span><span>Браузер</span></button>
-  <button class="appicon" onclick="openApp('settings')"><span class="emoji">⚙️</span><span>Настройки</span></button>
- </div>
-</main>
-<div class="startmenu" id="startmenu">
- <div style="display:flex;align-items:center;justify-content:space-between"><b>НикитОС</b><span class="muted">Меню приложений</span></div>
- <div class="startgrid">
-  <button onclick="openApp('files');toggleStart()">📁<span>Файлы</span></button>
-  <button onclick="openApp('notes');toggleStart()">📝<span>Заметки</span></button>
-  <button onclick="openApp('browser');toggleStart()">🌐<span>Браузер</span></button>
-  <button onclick="openApp('calculator');toggleStart()">🧮<span>Калькулятор</span></button>
-  <button onclick="openApp('settings');toggleStart()">⚙️<span>Настройки</span></button>
-  <button onclick="openApp('about');toggleStart()">💻<span>О системе</span></button>
- </div>
+<div id="desktop">
+  <div id="topInfo">НИКИТОС · DIGITAL DESKTOP <span id="version">v3.0</span> <span id="jsStatus" class="statusBadge">JS: запускается…</span></div>
+  <div id="desktopIcons">
+    <button class="desktopIcon" data-open="files"><span class="emoji">📁</span>Мои файлы</button>
+    <button class="desktopIcon" data-open="notes"><span class="emoji">📝</span>Заметки</button>
+    <button class="desktopIcon" data-open="calc"><span class="emoji">🧮</span>Калькулятор</button>
+    <button class="desktopIcon" data-open="settings"><span class="emoji">⚙️</span>Настройки</button>
+    <button class="desktopIcon" data-open="tasks"><span class="emoji">✅</span>Задачи</button>
+    <button class="desktopIcon" data-open="store"><span class="emoji">🛍️</span>Магазин</button>
+  </div>
+  <aside id="osDashboard" aria-label="Обзор системы">
+    <div class="dashTop"><span class="dashPill">NIKITOS 3.0</span><span id="dashDay">ТВОЙ РАБОЧИЙ ДЕНЬ</span></div>
+    <div class="dashGreeting"><div class="dashHello" id="dashGreeting">Привет!</div><div class="dashDate" id="dashDate">Загрузка даты…</div></div>
+    <div class="dashStats"><div><b id="dashTasks">0</b><span>задач</span></div><div><b id="dashApps">0</b><span>приложений</span></div></div>
+    <div class="dashActions"><button data-open="tasks">✅ Мои задачи</button><button data-open="notes">📝 Быстрая заметка</button><button data-open="store">🛍️ НикитМаркет</button></div>
+    <div class="dashTip">✦ Всё важное — под рукой</div>
+  </aside>
+  <div id="startMenu" class="panel">
+    <h2>🚀 Меню НикитОС</h2>
+    <input class="search" id="appSearch" placeholder="Найти приложение…" aria-label="Поиск приложения">
+    <div class="appGrid" id="appGrid">
+      <button class="appTile" data-open="files"><span>📁</span>Файлы</button>
+      <button class="appTile" data-open="notes"><span>📝</span>Заметки</button>
+      <button class="appTile" data-open="calc"><span>🧮</span>Калькулятор</button>
+      <button class="appTile" data-open="settings"><span>⚙️</span>Настройки</button>
+      <button class="appTile" data-open="tasks"><span>✅</span>Задачи</button>
+      <button class="appTile" data-open="store"><span>🛍️</span>Магазин приложений</button>
+      <button class="appTile" data-open="about"><span>💡</span>О системе</button>
+      <button class="appTile" data-action="power"><span>⏻</span>Питание</button>
+    </div>
+    <p class="muted" style="margin-bottom:0">Подсказка: если кнопки не работают в предпросмотре, открой файл через меню браузера.</p>
+  </div>
+  <div id="quickPanel" class="panel">
+    <h2>Быстрые настройки</h2>
+    <div class="quickGrid">
+      <button data-theme="default">🌌 Ночной фон</button>
+      <button data-theme="light">☀️ Светлая тема</button>
+      <button data-theme="sunset">🌇 Закат</button>
+      <button id="soundBtn">🔔 Звук: выкл.</button>
+      <button id="fullscreenBtn">⛶ Полный экран</button>
+      <button data-open="settings">⚙️ Все настройки</button>
+    </div>
+    <p class="muted">Некоторые возможности зависят от браузера.</p>
+  </div>
+  <section class="window" id="win-home">
+    <div class="titlebar"><span>🏠 Добро пожаловать</span><div class="titleBtns"><button class="minBtn" aria-label="Свернуть">—</button><button class="close closeBtn" aria-label="Закрыть">×</button></div></div>
+    <div class="winBody"><div class="hero"><div class="muted">ТВОЙ ЦИФРОВОЙ МИР</div><h2>Привет! Это НикитОС 👋</h2><p>Мини-операционная система в одном HTML-файле — работает на телефоне и компьютере.</p></div><p>Открой меню «Пуск», попробуй приложения и настрой фон под себя.</p><button data-open="about">Что нового в версии 3.0 →</button></div>
+  </section>
+  <section class="window" id="win-files">
+    <div class="titlebar"><span>📁 Мои файлы</span><div class="titleBtns"><button class="minBtn" aria-label="Свернуть">—</button><button class="close closeBtn" aria-label="Закрыть">×</button></div></div>
+    <div class="winBody"><div class="hero"><h2>Домашняя папка</h2><p class="muted">Создавай виртуальные папки и текстовые файлы. Данные сохраняются в памяти браузера на этом устройстве.</p></div>
+      <div class="row" style="margin-top:0"><button id="newFolderBtn">📁 Новая папка</button><button id="newTextBtn">📝 Новый TXT</button><button id="pickFile">📤 Файл устройства</button></div>
+      <input type="file" id="fileInput" hidden><div id="fileInfo" class="muted" style="margin-top:8px">Файл устройства ещё не выбран.</div>
+      <div class="row"><button id="filesUpBtn">⬆️ На уровень выше</button><input id="filesSearch" type="search" placeholder="🔍 Поиск в папке…" aria-label="Поиск файлов"></div>
+      <div id="filesPath" class="muted" style="margin:8px 0">📂 Мои файлы</div><div id="virtualFileList" class="taskList" aria-live="polite"></div>
+      <div id="fileEditor" style="display:none;margin-top:14px"><label for="fileEditorName">Имя текстового файла</label><input id="fileEditorName" maxlength="100" placeholder="Заметка.txt"><label for="fileEditorText" style="display:block;margin-top:8px">Содержимое</label><textarea id="fileEditorText" placeholder="Пиши здесь…"></textarea><div class="row"><button id="saveVirtualFile">💾 Сохранить файл</button><button id="cancelVirtualFile">Отмена</button><button id="downloadVirtualFile">⬇️ Скачать TXT</button></div><p id="fileEditorStatus" class="muted">Файл сохраняется внутри НикитОС.</p></div>
+      <p class="muted">Виртуальные файлы хранятся отдельно от настоящих файлов телефона. Чтобы сохранить TXT вне НикитОС, используй «Скачать TXT».</p></div>
+  </section>
+  <section class="window" id="win-notes">
+    <div class="titlebar"><span>📝 Заметки</span><div class="titleBtns"><button class="minBtn" aria-label="Свернуть">—</button><button class="close closeBtn" aria-label="Закрыть">×</button></div></div>
+    <div class="winBody"><p class="muted">Заметки автоматически сохраняются в памяти браузера на этом устройстве.</p><textarea id="notesText" placeholder="Напиши здесь идею для НикитОС…"></textarea><div class="row"><button id="saveNote">💾 Сохранить</button><button id="clearNote">Очистить</button></div><p id="noteStatus" class="muted">Готово к работе.</p></div>
+  </section>
+  <section class="window" id="win-calc">
+    <div class="titlebar"><span>🧮 Калькулятор</span><div class="titleBtns"><button class="minBtn" aria-label="Свернуть">—</button><button class="close closeBtn" aria-label="Закрыть">×</button></div></div>
+    <div class="winBody"><input class="calcDisplay" id="calcDisplay" value="0" inputmode="decimal" aria-label="Экран калькулятора" readonly><div class="calcGrid" id="calcGrid">
+      <button data-calc="C">C</button><button data-calc="(">(</button><button data-calc=")">)</button><button data-calc="/">÷</button>
+      <button data-calc="7">7</button><button data-calc="8">8</button><button data-calc="9">9</button><button data-calc="*">×</button>
+      <button data-calc="4">4</button><button data-calc="5">5</button><button data-calc="6">6</button><button data-calc="-">−</button>
+      <button data-calc="1">1</button><button data-calc="2">2</button><button data-calc="3">3</button><button data-calc="+">+</button>
+      <button data-calc="0">0</button><button data-calc=".">.</button><button data-calc="back">⌫</button><button data-calc="=">=</button>
+    </div></div>
+  </section>
+  <section class="window" id="win-tasks">
+    <div class="titlebar"><span>✅ Мои задачи</span><div class="titleBtns"><button class="minBtn" aria-label="Свернуть">—</button><button class="close closeBtn" aria-label="Закрыть">×</button></div></div>
+    <div class="winBody"><div class="hero"><h2>План на день</h2><p class="muted">Добавляй дела, отмечай выполненные — список сохраняется на устройстве.</p></div>
+      <form id="taskForm" class="row" style="margin-top:0"><input id="taskInput" type="text" maxlength="120" placeholder="Например: сделать домашнее задание" aria-label="Новая задача"><button id="addTaskBtn" type="submit">＋ Добавить</button></form>
+      <div id="taskCount" class="muted" style="margin-top:12px">Задач пока нет.</div><div id="taskList" class="taskList"></div>
+      <div class="row"><button id="clearDoneTasks" type="button">🧹 Удалить выполненные</button></div>
+    </div>
+  </section>
+  <section class="window" id="win-settings">
+    <div class="titlebar"><span>⚙️ Настройки</span><div class="titleBtns"><button class="minBtn" aria-label="Свернуть">—</button><button class="close closeBtn" aria-label="Закрыть">×</button></div></div>
+    <div class="winBody"><h2>Персонализация</h2><div class="settingsList">
+      <button data-theme="default">🌌 Установить ночной фон</button><button data-theme="light">☀️ Установить светлую тему</button><button data-theme="sunset">🌇 Установить закатный фон</button>
+      <button id="resetLayout">↺ Сбросить положение окон и меню</button><button id="exportNotes">📄 Скачать заметки в TXT</button>
+    </div>
+    <div class="hero" style="margin-top:14px"><h2>💾 Резервная копия</h2><p class="muted">Сохрани настройки, заметки, задачи, виртуальные файлы и установленные мини-приложения в JSON. Этот файл можно перенести на другое устройство.</p><div class="row"><button id="exportBackup">⬇️ Скачать копию JSON</button><button id="importBackup">📥 Восстановить из JSON</button></div><input id="backupInput" type="file" accept=".json,application/json" hidden><p id="backupStatus" class="muted" aria-live="polite">Резервная копия создаётся локально в браузере.</p></div>
+    <p class="muted">НикитОС 3.0 · один HTML-файл, без внешних библиотек.</p></div>
+  </section>
+  <section class="window" id="win-store">
+    <div class="titlebar"><span>🛍️ НикитМаркет — магазин приложений</span><div class="titleBtns"><button class="minBtn" aria-label="Свернуть">—</button><button class="close closeBtn" aria-label="Закрыть">×</button></div></div>
+    <div class="winBody" id="storeBody">
+      <div class="storeHero"><div class="storeKicker">NIKIT MARKET · WEB APP CENTER</div><h2>Целый мир приложений — прямо в НикитОС</h2><p>Игры, творчество, учёба, инструменты и развлечения. Устанавливай мини-приложения в свою систему.</p><div class="storeStats"><div><b id="storeTotal">36</b><span>приложений</span></div><div><b id="installedCount">0</b><span>установлено</span></div><div><b>Бесплатно</b><span>каталог НикитОС</span></div></div></div>
+      <input id="storeSearch" class="search" type="search" placeholder="🔍 Найти приложение по названию или описанию…" aria-label="Поиск приложений в магазине">
+      <div class="storeTools"><div id="storeCategories" class="storeCategories"><button class="storeCat selected" data-category="Все">🌐 Все</button><button class="storeCat" data-category="Игры">🎮 Игры</button><button class="storeCat" data-category="Учёба">📚 Учёба</button><button class="storeCat" data-category="Инструменты">🧰 Инструменты</button><button class="storeCat" data-category="Творчество">🎨 Творчество</button><button class="storeCat" data-category="Развлечения">✨ Развлечения</button><button class="storeCat" data-category="Установлено">📥 Установлено</button></div><select id="storeSort" aria-label="Сортировка приложений"><option value="featured">Рекомендуемые</option><option value="name">По названию</option><option value="installed">Сначала установленные</option></select></div>
+      <div class="storeSectionHead"><h3 id="storeHeading">🔥 Популярные приложения</h3><span id="storeResultCount" class="muted">36 приложений</span></div>
+      <div id="storeGrid" class="storeGrid" aria-live="polite"></div><p id="storeEmpty" class="muted" style="display:none">Ничего не найдено. Попробуй другое название или категорию.</p>
+      <div class="storeNote">ℹ️ Это встроенный браузерный каталог НикитОС. Установка добавляет мини-приложение в меню системы; сторонние сайты и файлы автоматически не скачиваются.</div>
+    </div>
+  </section>
+  <section class="window" id="win-about">
+    <div class="titlebar"><span>💡 О НикитОС</span><div class="titleBtns"><button class="minBtn" aria-label="Свернуть">—</button><button class="close closeBtn" aria-label="Закрыть">×</button></div></div>
+    <div class="winBody"><div class="bigClock" id="bigClock">--:--</div><p class="muted" id="fullDate"></p><div class="hero"><h2>Версия 3.0 — большое обновление системы</h2><ul><li>Создание резервной копии в формате JSON</li><li>Экспорт настроек, заметок, задач, виртуальных файлов и данных мини-приложений</li><li>Восстановление копии с проверкой структуры и размера файла</li><li>Защита от частичного восстановления: при ошибке попытка вернуть прежние данные</li><li>Сохранён мобильный интерфейс НикитМаркета с двумя колонками в меню Пуск</li><li>Сохранены файловый менеджер, заметки, задачи, калькулятор и темы</li></ul></div><p>Резервная копия — JSON-файл, который ты скачиваешь и хранишь самостоятельно. Импорт заменяет сохранённые данные НикитОС из этой копии.</p></div>
+  </section>
+  <div id="taskbar">
+    <div id="taskLeft"><button id="startBtn">✦ НикитОС</button><div id="taskApps"><button data-open="home">🏠</button><button data-open="notes">📝</button><button data-open="calc">🧮</button><button data-open="store" title="НикитМаркет">🛍️</button></div></div>
+    <button id="systemCenterBtn" aria-label="Центр системы" title="Центр системы">◈</button><button id="quickBtn" aria-label="Быстрые настройки">⚙️</button>
+    <div id="clock"><div id="clockTime">--:--</div><div id="clockDate">--.--.----</div></div>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <div id="powerOverlay"><div><div style="font-size:52px">⏻</div><h2>НикитОС приостановлена</h2><p>Это демонстрационный режим. Данные в браузере остаются сохранёнными.</p><button id="wakeBtn">Вернуться на рабочий стол</button></div></div>
 </div>
-<div class="taskbar">
- <button class="start" onclick="toggleStart()" aria-label="Пуск">⊞</button>
- <button class="tasksearch" onclick="openApp('search')">⌕　Поиск приложений и настроек</button>
- <div class="tray"><span id="clock">--:--</span><br><span id="date">--.--.----</span></div>
-</div>
-<section class="window" id="window">
- <header class="titlebar"><span id="winIcon">💻</span><strong id="winTitle">Приложение</strong><button class="close" onclick="closeApp()">✕</button></header>
- <div class="content" id="winContent"></div>
-</section>
-<div class="toast" id="toast"></div>
 <script>
-const $=id=>document.getElementById(id);
-const win=$('window'),content=$('winContent');
-function toggleStart(){$('startmenu').classList.toggle('show')}
-function closeApp(){win.classList.remove('show')}
-function notify(s){$('toast').textContent=s;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2300)}
-function openApp(app){
- const data={
- files:['📁','Файлы',`<h2>Мои файлы</h2><p class="muted">Это демонстрационный файловый раздел НикитОС.</p><div class="cards"><div class="card">📂<br><b>Документы</b><span class="muted">Папка</span></div><div class="card">🖼️<br><b>Изображения</b><span class="muted">Папка</span></div><div class="card">⬇️<br><b>Загрузки</b><span class="muted">Папка</span></div></div>`],
- notes:['📝','Заметки',`<h2>Быстрые заметки</h2><p class="muted">Текст автоматически сохраняется на этом устройстве.</p><textarea class="field note" id="note" placeholder="Напиши что-нибудь..."></textarea><button onclick="saveNote()">Сохранить</button> <span id="saved" class="muted"></span>`],
- browser:['🌐','Браузер',`<h2>Быстрый переход</h2><p class="muted">Открой сайт в новой вкладке.</p><form class="browserbar" onsubmit="goSite(event)"><input class="field" id="site" placeholder="https://example.com"><button>Перейти ↗</button></form><div class="cards"><button onclick="visit('https://www.wikipedia.org')">Wikipedia</button><button onclick="visit('https://github.com')">GitHub</button><button onclick="visit('https://www.youtube.com')">YouTube</button></div>`],
- settings:['⚙️','Настройки',`<h2>Персонализация</h2><p class="muted">Выбери оформление рабочего стола.</p><div class="wallpapers"><button onclick="wall(0)">🌌 Космос</button><button onclick="wall(1)">🌊 Океан</button><button onclick="wall(2)">🌅 Закат</button></div><hr style="border-color:var(--line);margin:22px 0"><p>Версия системы: <b>2.0</b></p><p class="muted">Настройки хранятся только в текущем браузере.</p>`],
- calculator:['🧮','Калькулятор',`<h2>Калькулятор</h2><input class="field" id="calc" placeholder="Например: 12*(5+2)"><button onclick="calculate()">Посчитать</button><h3 id="result"></h3><p class="muted">Поддерживаются числа и операции + − × ÷ скобки.</p>`],
- about:['💻','О НикитОС',`<div style="text-align:center;padding:22px"><div style="font-size:64px">⊞</div><h1>НикитОС</h1><p class="muted">Твоя мини-операционная система в одном HTML-файле.</p><div class="cards"><div class="card"><b>2.0</b>Версия</div><div class="card"><b>HTML</b>Технология</div><div class="card"><b>📱 ПК</b>Адаптивность</div></div></div>`],
- search:['⌕','Поиск',`<h2>Поиск по приложениям</h2><input class="field" id="find" placeholder="Например, заметки" oninput="searchApps()"><div id="found" class="cards"></div>`]
- };
- const d=data[app]||data.about;$('winIcon').textContent=d[0];$('winTitle').textContent=d[1];content.innerHTML=d[2];win.classList.add('show');
- if(app==='notes')$('note').value=localStorage.getItem('nikitos-note')||'';
-}
-function saveNote(){localStorage.setItem('nikitos-note',$('note').value);$('saved').textContent='Сохранено ✓'}
-function visit(url){window.open(url,'_blank','noopener')}
-function goSite(e){e.preventDefault();let v=$('site').value.trim();if(!v)return;if(!/^https?:\/\//i.test(v))v='https://'+v;visit(v)}
-function calculate(){try{let s=$('calc').value;if(!/^[0-9+\-*/().\s]+$/.test(s))throw 0;let n=Function('"use strict";return ('+s+')')();$('result').textContent=Number.isFinite(n)?'= '+n:'Ошибка'}catch(e){$('result').textContent='Проверь выражение'}}
-function wall(n){let b=document.body;b.style.background=n===0?'radial-gradient(circle at 20% 20%,#284e79,transparent 38%),linear-gradient(135deg,#0c1728,#172b45)':n===1?'linear-gradient(135deg,#075985,#0e7490,#082f49)':'linear-gradient(135deg,#7c2d12,#c2410c,#312e81)';notify('Обои изменены')}
-function searchApps(){let q=$('find').value.toLowerCase(),apps=[['📁','Файлы','files'],['📝','Заметки','notes'],['🌐','Браузер','browser'],['🧮','Калькулятор','calculator'],['⚙️','Настройки','settings'],['💻','О системе','about']];$('found').innerHTML=apps.filter(a=>a[1].toLowerCase().includes(q)).map(a=>`<button onclick="openApp('${a[2]}')">${a[0]} ${a[1]}</button>`).join('')||'<p class="muted">Ничего не найдено</p>'}
-function tick(){let d=new Date();$('clock').textContent=d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});$('date').textContent=d.toLocaleDateString('ru-RU')}
-tick();setInterval(tick,1000);
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeApp();$('startmenu').classList.remove('show')}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openApp('search')}});
+(function(){
+'use strict';
+function ready(fn){if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fn,{once:true});else fn();}
+ready(function(){
+  var desktop=document.getElementById('desktop'),startMenu=document.getElementById('startMenu'),quickPanel=document.getElementById('quickPanel');
+  var zTop=30,toastTimer=null,soundOn=false,expression='',tasks=[],virtualFiles=[],currentFolderId=null,editingFileId=null;
+  function one(sel,root){return (root||document).querySelector(sel);}
+  function all(sel,root){return Array.prototype.slice.call((root||document).querySelectorAll(sel));}
+  function toast(msg){var t=one('#toast');if(!t)return;t.textContent=msg;t.style.display='block';clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.style.display='none';},2300);}
+  function closePanels(){startMenu.classList.remove('open');quickPanel.classList.remove('open');}
+  function openApp(name){if(name==='store'){renderStore();}var win=document.getElementById('win-'+name);if(!win){toast('Приложение не найдено: '+name);return;}closePanels();all('.window').forEach(function(w){w.classList.remove('active');});win.classList.add('active');win.style.zIndex=String(++zTop);}
+  function setTheme(theme,quiet){desktop.classList.remove('light','sunset');if(theme==='light'||theme==='sunset')desktop.classList.add(theme);try{localStorage.setItem('nikitos-theme',theme);}catch(e){}closePanels();if(!quiet)toast('Тема изменена');}
+  function clock(){var now=new Date();one('#clockTime').textContent=now.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit',hour12:false});one('#clockDate').textContent=now.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'});one('#bigClock').textContent=now.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});one('#fullDate').textContent=now.toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}
+  function saveNotes(){var status=one('#noteStatus');try{localStorage.setItem('nikitos-notes',one('#notesText').value);status.textContent='Сохранено · '+new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit',hour12:false});}catch(e){status.textContent='Не удалось сохранить в этом режиме браузера.';}}
+  function downloadNotes(){var blob=new Blob([one('#notesText').value],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Мои заметки.txt';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url);},1000);toast('Файл заметок подготовлен');}
+  function calcPress(v){var display=one('#calcDisplay');if(v==='C'){expression='';display.value='0';return;}if(v==='back'){expression=expression.slice(0,-1);display.value=expression||'0';return;}if(v!=='='){if(expression.length<60)expression+=v;display.value=expression||'0';return;}if(!expression)return;if(!/^[0-9+\-*/().\s]+$/.test(expression)){expression='';display.value='Ошибка';return;}
+    try{var tokens=expression.match(/(?:\d+\.?\d*|\.\d+)|[()+\-*/]/g)||[];if(tokens.join('')!==expression.replace(/\s/g,''))throw Error('syntax');var pos=0;
+      function expr(){var n=term();while(tokens[pos]==='+'||tokens[pos]==='-'){var op=tokens[pos++],r=term();n=op==='+'?n+r:n-r;}return n;}
+      function term(){var n=factor();while(tokens[pos]==='*'||tokens[pos]==='/'){var op=tokens[pos++],r=factor();if(op==='/'&&r===0)throw Error('zero');n=op==='*'?n*r:n/r;}return n;}
+      function factor(){if(tokens[pos]==='+'){pos++;return factor();}if(tokens[pos]==='-'){pos++;return -factor();}if(tokens[pos]==='('){pos++;var n=expr();if(tokens[pos++]!==')')throw Error('paren');return n;}var t=tokens[pos++];if(!t||!(/^\d+\.?\d*$|^\.\d+$/.test(t)))throw Error('number');return Number(t);}
+      var result=expr();if(pos!==tokens.length||!Number.isFinite(result))throw Error('result');expression=String(Number(result.toPrecision(12)));display.value=expression;
+    }catch(err){expression='';display.value='Ошибка';}}
+  function persistTasks(){try{localStorage.setItem('nikitos-tasks',JSON.stringify(tasks));}catch(e){toast('Список работает, но браузер не разрешил сохранить его');}}
+  function renderTasks(){var list=one('#taskList');list.textContent='';if(!tasks.length){var empty=document.createElement('p');empty.className='muted';empty.textContent='Пока нет задач. Добавь первую выше!';list.appendChild(empty);}tasks.forEach(function(task){var item=document.createElement('div');item.className='taskItem'+(task.done?' done':'');var checkbox=document.createElement('input');checkbox.type='checkbox';checkbox.checked=!!task.done;checkbox.setAttribute('aria-label','Отметить задачу выполненной');var label=document.createElement('span');label.className='taskText';label.textContent=task.text;var del=document.createElement('button');del.type='button';del.textContent='✕';del.setAttribute('aria-label','Удалить задачу');checkbox.addEventListener('change',function(){task.done=checkbox.checked;persistTasks();renderTasks();});del.addEventListener('click',function(){tasks=tasks.filter(function(t){return t.id!==task.id;});persistTasks();renderTasks();});item.appendChild(checkbox);item.appendChild(label);item.appendChild(del);list.appendChild(item);});var done=tasks.filter(function(t){return t.done;}).length;one('#taskCount').textContent='Всего: '+tasks.length+' · выполнено: '+done;}
+  function addTask(text){text=(text||'').trim();if(!text){toast('Сначала напиши задачу');one('#taskInput').focus();return;}tasks.push({id:Date.now()+Math.random(),text:text,done:false});one('#taskInput').value='';persistTasks();renderTasks();one('#taskInput').focus();}
+  function loadVirtualFiles(){try{var raw=JSON.parse(localStorage.getItem('nikitos-virtual-files')||'[]');virtualFiles=Array.isArray(raw)?raw.filter(function(f){return f&&typeof f.id==='string'&&typeof f.name==='string'&&(f.type==='folder'||f.type==='text');}):[];}catch(e){virtualFiles=[];}}
+  function persistVirtualFiles(){try{localStorage.setItem('nikitos-virtual-files',JSON.stringify(virtualFiles));return true;}catch(e){toast('Не удалось сохранить: возможно, закончилось место браузера');return false;}}
+  function safeName(name){return (name||'').trim().replace(/[\\/:*?"<>|]/g,'-').slice(0,100);}
+  function currentFolderExists(){return currentFolderId===null||virtualFiles.some(function(f){return f.id===currentFolderId&&f.type==='folder';});}
+  function renderVirtualFiles(){
+    if(!currentFolderExists())currentFolderId=null;
+    var list=one('#virtualFileList'),q=one('#filesSearch').value.trim().toLowerCase();list.textContent='';
+    var folder=currentFolderId===null?null:virtualFiles.find(function(f){return f.id===currentFolderId;});
+    one('#filesPath').textContent='📂 Мои файлы'+(folder?' / '+folder.name:'');
+    var items=virtualFiles.filter(function(f){return (f.parentId||null)===currentFolderId&&f.name.toLowerCase().indexOf(q)!==-1;});
+    items.sort(function(a,b){return (a.type===b.type?0:(a.type==='folder'?-1:1))||a.name.localeCompare(b.name,'ru');});
+    if(!items.length){var empty=document.createElement('p');empty.className='muted';empty.textContent=q?'Ничего не найдено.':'Папка пуста. Создай папку или TXT-файл!';list.appendChild(empty);}
+    items.forEach(function(f){var row=document.createElement('div');row.className='taskItem';var label=document.createElement('button');label.type='button';label.className='taskText';label.style.textAlign='left';label.style.background='transparent';label.style.border='0';label.textContent=(f.type==='folder'?'📁 ':'📄 ')+f.name;label.setAttribute('data-file-action',f.type==='folder'?'open':'edit');label.setAttribute('data-file-id',f.id);var rename=document.createElement('button');rename.type='button';rename.textContent='✏️';rename.title='Переименовать';rename.setAttribute('data-file-action','rename');rename.setAttribute('data-file-id',f.id);var del=document.createElement('button');del.type='button';del.textContent='🗑️';del.title='Удалить';del.setAttribute('data-file-action','delete');del.setAttribute('data-file-id',f.id);row.appendChild(label);row.appendChild(rename);row.appendChild(del);list.appendChild(row);});
+  }
+  function createVirtualItem(type){var name=prompt(type==='folder'?'Название новой папки:':'Название текстового файла:',type==='folder'?'Новая папка':'Новый файл.txt');if(name===null)return;name=safeName(name);if(!name){toast('Название не должно быть пустым');return;}if(type==='text'&&!/\.txt$/i.test(name))name+='.txt';if(virtualFiles.some(function(f){return (f.parentId||null)===currentFolderId&&f.name.toLowerCase()===name.toLowerCase();})){toast('В этой папке уже есть такое имя');return;}var f={id:'vf-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8),type:type,name:name,parentId:currentFolderId,content:''};virtualFiles.push(f);if(persistVirtualFiles()){renderVirtualFiles();toast(type==='folder'?'Папка создана':'Текстовый файл создан');if(type==='text')editVirtualFile(f.id);}}
+  function editVirtualFile(id){var f=virtualFiles.find(function(x){return x.id===id&&x.type==='text';});if(!f)return;editingFileId=id;one('#fileEditor').style.display='block';one('#fileEditorName').value=f.name;one('#fileEditorText').value=f.content||'';one('#fileEditorStatus').textContent='Редактируется: '+f.name;one('#fileEditorName').focus();}
+  function saveVirtualFile(){var f=virtualFiles.find(function(x){return x.id===editingFileId&&x.type==='text';});if(!f){toast('Сначала выбери текстовый файл');return;}var name=safeName(one('#fileEditorName').value);if(!name){toast('Укажи название файла');return;}if(!/\.txt$/i.test(name))name+='.txt';if(virtualFiles.some(function(x){return x.id!==f.id&&(x.parentId||null)===(f.parentId||null)&&x.name.toLowerCase()===name.toLowerCase();})){toast('В этой папке уже есть такое имя');return;}f.name=name;f.content=one('#fileEditorText').value;if(persistVirtualFiles()){renderVirtualFiles();one('#fileEditorStatus').textContent='Сохранено · '+new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit',hour12:false});toast('Файл сохранён');}}
+  function downloadVirtualFile(){var name=safeName(one('#fileEditorName').value)||'Файл.txt';if(!/\.txt$/i.test(name))name+='.txt';var blob=new Blob([one('#fileEditorText').value],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url);},1000);toast('Подготовлено скачивание '+name);}
+  function fileAction(btn){var action=btn.getAttribute('data-file-action'),id=btn.getAttribute('data-file-id'),f=virtualFiles.find(function(x){return x.id===id;});if(!f)return;if(action==='open'&&f.type==='folder'){currentFolderId=f.id;one('#filesSearch').value='';renderVirtualFiles();return;}if(action==='edit'){editVirtualFile(id);return;}if(action==='rename'){var name=prompt('Новое имя:',f.name);if(name===null)return;name=safeName(name);if(!name){toast('Название не должно быть пустым');return;}if(f.type==='text'&&!/\.txt$/i.test(name))name+='.txt';if(virtualFiles.some(function(x){return x.id!==f.id&&(x.parentId||null)===(f.parentId||null)&&x.name.toLowerCase()===name.toLowerCase();})){toast('В этой папке уже есть такое имя');return;}f.name=name;if(persistVirtualFiles()){renderVirtualFiles();if(editingFileId===id)editVirtualFile(id);toast('Переименовано');}return;}if(action==='delete'){var descendants=[];function collect(folderId){virtualFiles.filter(function(x){return x.parentId===folderId;}).forEach(function(x){descendants.push(x.id);if(x.type==='folder')collect(x.id);});}if(f.type==='folder')collect(f.id);if(!confirm('Удалить «'+f.name+'»'+(descendants.length?' и всё внутри ('+descendants.length+' элементов)':'')+'?'))return;var removeIds=[id].concat(descendants);virtualFiles=virtualFiles.filter(function(x){return removeIds.indexOf(x.id)===-1;});if(removeIds.indexOf(editingFileId)!==-1){editingFileId=null;one('#fileEditor').style.display='none';}if(persistVirtualFiles()){renderVirtualFiles();toast('Удалено');}}}
+  var catalogApps=[
+    {id:'snake',name:'Змейка',icon:'🐍',cat:'Игры',desc:'Классическая мини-игра: собирай очки и не врезайся в стены.',featured:1},
+    {id:'clicker',name:'Суперкликер',icon:'👆',cat:'Игры',desc:'Кликай, набирай очки и проверяй скорость реакции.',featured:2},
+    {id:'memory',name:'Тренировка памяти',icon:'🧠',cat:'Игры',desc:'Запоминай последовательности и тренируй внимание.',featured:3},
+    {id:'rps',name:'Камень, ножницы, бумага',icon:'✂️',cat:'Игры',desc:'Сыграй несколько раундов против компьютера.'},
+    {id:'guess',name:'Угадай число',icon:'🎯',cat:'Игры',desc:'Найди загаданное число от 1 до 100.'},
+    {id:'reaction',name:'Тест реакции',icon:'⚡',cat:'Игры',desc:'Проверь, как быстро ты реагируешь на сигнал.'},
+    {id:'quiz',name:'Квиз-мания',icon:'❓',cat:'Игры',desc:'Короткие вопросы на общие знания.'},
+    {id:'puzzle',name:'Числовая головоломка',icon:'🔢',cat:'Игры',desc:'Решай простые логические задачки.'},
+    {id:'flashcards',name:'Карточки слов',icon:'🗂️',cat:'Учёба',desc:'Создавай пары терминов и проверяй себя.'},
+    {id:'mathtrainer',name:'Математика+',icon:'➗',cat:'Учёба',desc:'Генерируй примеры и проверяй ответы.'},
+    {id:'english',name:'English Buddy',icon:'🇬🇧',cat:'Учёба',desc:'Повторяй базовые английские слова.'},
+    {id:'typing',name:'Скоропечатание',icon:'⌨️',cat:'Учёба',desc:'Тренируй точность набора текста.'},
+    {id:'timer',name:'Таймер и секундомер',icon:'⏱️',cat:'Инструменты',desc:'Запускай таймер и измеряй время.'},
+    {id:'calculator',name:'Калькулятор+',icon:'🧮',cat:'Инструменты',desc:'Быстрые вычисления прямо в отдельном окне.'},
+    {id:'converter',name:'Конвертер единиц',icon:'📏',cat:'Инструменты',desc:'Переводи длину, массу и температуру.'},
+    {id:'todo',name:'Планировщик дня',icon:'📋',cat:'Инструменты',desc:'Составляй список дел и отмечай готовое.'},
+    {id:'color',name:'Палитра цветов',icon:'🎨',cat:'Творчество',desc:'Выбирай цвет, смотри HEX-код и копируй его.'},
+    {id:'draw',name:'Рисовалка',icon:'🖌️',cat:'Творчество',desc:'Рисуй пальцем или мышью на холсте.'},
+    {id:'pixel',name:'Пиксель-арт',icon:'🟪',cat:'Творчество',desc:'Создавай узоры на маленькой сетке.'},
+    {id:'story',name:'Генератор историй',icon:'📖',cat:'Творчество',desc:'Получай случайные идеи для собственных рассказов.'},
+    {id:'music',name:'Звуковая лаборатория',icon:'🎵',cat:'Творчество',desc:'Создавай простые звуки с помощью генератора тона.'},
+    {id:'journal',name:'Дневник',icon:'📔',cat:'Инструменты',desc:'Записывай мысли, которые сохраняются в браузере.'},
+    {id:'weather',name:'Погодный блокнот',icon:'🌦️',cat:'Инструменты',desc:'Отмечай прогноз вручную и веди погодные заметки.'},
+    {id:'quotes',name:'Цитата дня',icon:'💬',cat:'Развлечения',desc:'Случайные добрые мысли для вдохновения.'},
+    {id:'fortune',name:'Колесо идей',icon:'🎡',cat:'Развлечения',desc:'Выбирай случайное занятие, когда скучно.'},
+    {id:'breathing',name:'Перерыв',icon:'🌿',cat:'Развлечения',desc:'Небольшая спокойная пауза между делами.'},
+    {id:'random',name:'Случайный выбор',icon:'🎲',cat:'Инструменты',desc:'Выбирай случайный вариант из своего списка.'},
+    {id:'password',name:'Генератор паролей',icon:'🔐',cat:'Инструменты',desc:'Создавай случайные пароли локально в браузере.'},
+    {id:'markdown',name:'Текстовая мастерская',icon:'📝',cat:'Творчество',desc:'Пиши и сохраняй текстовые заметки.'},
+    {id:'calendar',name:'Календарь',icon:'🗓️',cat:'Инструменты',desc:'Посмотри текущую дату и добавь напоминание.'},
+    {id:'pomodoro',name:'Фокус 25',icon:'🍅',cat:'Учёба',desc:'Таймер для учёбы с короткими перерывами.'},
+    {id:'wiki',name:'Мой справочник',icon:'📚',cat:'Учёба',desc:'Сохраняй собственные определения и подсказки.'},
+    {id:'webnotes',name:'Веб-закладки',icon:'🔖',cat:'Инструменты',desc:'Храни любимые ссылки и открывай их в браузере.'},
+    {id:'emoji',name:'Эмодзи-студия',icon:'😎',cat:'Развлечения',desc:'Собирай эмодзи и копируй комбинации.'},
+    {id:'counter',name:'Счётчик',icon:'🔢',cat:'Инструменты',desc:'Универсальный счётчик с плюс и минус.'},
+    {id:'pixelclock',name:'Часы',icon:'🕒',cat:'Инструменты',desc:'Большие часы и дата в отдельном окне.'}
+  ];
+  var installedApps=[];var activeStoreCategory='Все';
+  try{var savedInstalled=JSON.parse(localStorage.getItem('nikitos-installed-apps')||'[]');if(Array.isArray(savedInstalled))installedApps=savedInstalled.filter(function(id){return catalogApps.some(function(a){return a.id===id;});});}catch(e){}
+  function saveInstalled(){try{localStorage.setItem('nikitos-installed-apps',JSON.stringify(installedApps));}catch(e){toast('Не удалось сохранить список установленных приложений');}}
+  function renderStore(){var grid=one('#storeGrid');if(!grid)return;grid.textContent='';var q=(one('#storeSearch').value||'').trim().toLowerCase(),sort=one('#storeSort').value;var arr=catalogApps.filter(function(a){var matches=(a.name+' '+a.desc+' '+a.cat).toLowerCase().indexOf(q)!==-1;var cat=activeStoreCategory==='Все'||(activeStoreCategory==='Установлено'?installedApps.indexOf(a.id)!==-1:a.cat===activeStoreCategory);return matches&&cat;});if(sort==='name')arr.sort(function(a,b){return a.name.localeCompare(b.name,'ru');});else if(sort==='installed')arr.sort(function(a,b){return installedApps.indexOf(b.id)-installedApps.indexOf(a.id)||((a.featured||99)-(b.featured||99));});else arr.sort(function(a,b){return (a.featured||99)-(b.featured||99)||a.name.localeCompare(b.name,'ru');});
+    arr.forEach(function(a){var installed=installedApps.indexOf(a.id)!==-1,card=document.createElement('article');card.className='storeCard';var top=document.createElement('div');top.className='storeCardTop';var icon=document.createElement('div');icon.className='storeIcon';icon.textContent=a.icon;var info=document.createElement('div');var title=document.createElement('h4');title.textContent=a.name;var meta=document.createElement('div');meta.className='storeMeta';meta.textContent=a.cat+' · '+(installed?'Установлено':'Бесплатно');info.appendChild(title);info.appendChild(meta);top.appendChild(icon);top.appendChild(info);var desc=document.createElement('p');desc.textContent=a.desc;var actions=document.createElement('div');actions.className='storeCardActions';var primary=document.createElement('button');primary.className=installed?'storeOpen':'storeInstall';primary.textContent=installed?'▶ Открыть':'＋ Установить';primary.setAttribute('data-store-action',installed?'open':'install');primary.setAttribute('data-app-id',a.id);actions.appendChild(primary);if(installed){var remove=document.createElement('button');remove.textContent='Удалить';remove.setAttribute('data-store-action','remove');remove.setAttribute('data-app-id',a.id);actions.appendChild(remove);}card.appendChild(top);card.appendChild(desc);card.appendChild(actions);grid.appendChild(card);});one('#storeTotal').textContent=catalogApps.length;one('#installedCount').textContent=installedApps.length;one('#storeResultCount').textContent=arr.length+' приложений';one('#storeEmpty').style.display=arr.length?'none':'block';one('#storeHeading').textContent=activeStoreCategory==='Все'?'🔥 Популярные приложения':activeStoreCategory==='Установлено'?'📥 Установленные приложения':'📦 '+activeStoreCategory;
+  }
+  function addInstalledTile(app){var grid=one('#appGrid');if(!grid||one('[data-installed-id="'+app.id+'"]',grid))return;var b=document.createElement('button');b.className='appTile';b.setAttribute('data-installed-id',app.id);b.setAttribute('data-catalog-launch',app.id);var ico=document.createElement('span');ico.textContent=app.icon;b.appendChild(ico);b.appendChild(document.createTextNode(app.name));grid.appendChild(b);}
+  function removeInstalledTile(id){var b=one('[data-installed-id="'+id+'"]');if(b)b.remove();}
+  function installCatalogApp(id){var app=catalogApps.find(function(a){return a.id===id;});if(!app)return;if(installedApps.indexOf(id)===-1)installedApps.push(id);saveInstalled();addInstalledTile(app);renderStore();toast('Установлено: '+app.name);}
+  function removeCatalogApp(id){var app=catalogApps.find(function(a){return a.id===id;});installedApps=installedApps.filter(function(x){return x!==id;});saveInstalled();removeInstalledTile(id);renderStore();toast('Удалено: '+(app?app.name:'приложение'));}
+  function launchCatalogApp(id){if(installedApps.indexOf(id)===-1){toast('Сначала установи приложение в НикитМаркете');return;}var a=catalogApps.find(function(x){return x.id===id;});if(!a)return;var winId='win-catalog-'+id,win=document.getElementById(winId);if(!win){win=document.createElement('section');win.className='window';win.id=winId;var bar=document.createElement('div');bar.className='titlebar';var label=document.createElement('span');label.textContent=a.icon+' '+a.name;var controls=document.createElement('div');controls.className='titleBtns';var close=document.createElement('button');close.className='close closeBtn';close.textContent='×';close.setAttribute('aria-label','Закрыть');controls.appendChild(close);bar.appendChild(label);bar.appendChild(controls);var body=document.createElement('div');body.className='winBody';body.innerHTML=miniAppMarkup(id);win.appendChild(bar);win.appendChild(body);desktop.appendChild(win);close.addEventListener('click',function(){win.classList.remove('active');});var drag=null;bar.addEventListener('pointerdown',function(e){if(e.target.closest('button'))return;var r=win.getBoundingClientRect(),d=desktop.getBoundingClientRect();drag={x:e.clientX,y:e.clientY,l:r.left-d.left,t:r.top-d.top,id:e.pointerId};win.style.transform='none';win.style.left=drag.l+'px';win.style.top=drag.t+'px';try{bar.setPointerCapture(e.pointerId);}catch(err){}});bar.addEventListener('pointermove',function(e){if(!drag||drag.id!==e.pointerId)return;win.style.left=Math.max(0,Math.min(desktop.clientWidth-win.offsetWidth,drag.l+e.clientX-drag.x))+'px';win.style.top=Math.max(0,Math.min(desktop.clientHeight-win.offsetHeight,drag.t+e.clientY-drag.y))+'px';});bar.addEventListener('pointerup',function(){drag=null;});}
+    closePanels();all('.window').forEach(function(w){w.classList.remove('active');});win.classList.add('active');win.style.zIndex=String(++zTop);wireMiniApp(win,id);
+  }
+  function miniAppMarkup(id){var common='<div class="miniAppArea">';if(id==='clicker')return common+'<div class="miniOutput miniBig">Очки: <span id="miniScore">0</span></div><button id="miniClick">👆 ЖМИ СЮДА!</button><button id="miniReset">Сбросить счёт</button></div>';
+    if(id==='guess')return common+'<p>Я загадал число от 1 до 100. Попробуй угадать!</p><input id="miniGuess" type="number" min="1" max="100" placeholder="Твоё число"><button id="miniGuessBtn">Проверить</button><div id="miniGuessOut" class="miniOutput">Начинай игру!</div><button id="miniGuessReset">Новое число</button></div>';
+    if(id==='rps')return common+'<p>Выбирай ход:</p><div class="miniActions"><button data-rps="Камень">🪨 Камень</button><button data-rps="Ножницы">✂️ Ножницы</button><button data-rps="Бумага">📄 Бумага</button></div><div id="miniRpsOut" class="miniOutput">Удачи!</div></div>';
+    if(id==='quotes')return common+'<div id="miniQuote" class="miniOutput">Нажми кнопку, чтобы получить мысль дня.</div><button id="miniQuoteBtn">✨ Новая цитата</button></div>';
+    if(id==='color')return common+'<label>Выбери цвет</label><input id="miniColor" type="color" value="#67e8f9"><div id="miniColorOut" class="miniOutput">#67E8F9</div><button id="miniCopyColor">Копировать HEX</button></div>';
+    if(id==='timer'||id==='pomodoro'||id==='pixelclock')return common+'<div id="miniTimerOut" class="miniOutput miniBig">'+(id==='pomodoro'?'25:00':id==='pixelclock'?'--:--:--':'00:00')+'</div>'+(id==='pixelclock'?'':'<div class="row"><input id="miniMinutes" type="number" min="1" max="180" value="'+(id==='pomodoro'?'25':'1')+'" aria-label="Минуты"><button id="miniTimerStart">▶ Старт</button><button id="miniTimerStop">⏸ Стоп</button><button id="miniTimerReset">↺ Сброс</button></div>')+'</div>';
+    if(id==='mathtrainer')return common+'<div id="miniMath" class="miniOutput miniBig"></div><input id="miniMathAnswer" type="number" placeholder="Ответ"><button id="miniMathCheck">Проверить</button><div id="miniMathOut" class="miniOutput"></div><button id="miniMathNext">Следующий пример</button></div>';
+    if(id==='random'||id==='fortune')return common+'<p>Введи варианты через запятую:</p><textarea id="miniOptions" placeholder="Например: почитать, поиграть, порисовать"></textarea><button id="miniPick">🎲 Выбрать случайно</button><div id="miniPickOut" class="miniOutput">Жду варианты…</div></div>';
+    if(id==='password')return common+'<label>Длина пароля</label><input id="miniPassLen" type="number" min="8" max="40" value="16"><button id="miniPassGen">🔐 Создать пароль</button><div id="miniPassOut" class="miniOutput">Пароль появится здесь.</div></div>';
+    if(id==='counter')return common+'<div id="miniCount" class="miniOutput miniBig">0</div><div class="miniActions"><button id="miniMinus">−1</button><button id="miniPlus">＋1</button><button id="miniCountReset">Сброс</button></div></div>';
+    if(id==='draw')return common+'<label>Цвет кисти</label><input id="miniBrush" type="color" value="#67e8f9"><canvas id="miniCanvas" width="700" height="360" style="width:100%;border:1px solid var(--line);border-radius:12px;background:#fff;touch-action:none"></canvas><button id="miniClearCanvas">Очистить рисунок</button></div>';
+    if(id==='webnotes')return common+'<p>Добавь ссылку, чтобы сохранить её в этом списке.</p><input id="miniUrlName" placeholder="Название сайта"><input id="miniUrl" type="url" placeholder="https://example.com"><button id="miniUrlAdd">＋ Добавить закладку</button><div id="miniUrlList" class="miniOutput"></div></div>';
+    if(id==='calendar')return common+'<div id="miniCalendarDate" class="miniOutput miniBig"></div><input id="miniReminder" placeholder="Напоминание"><button id="miniReminderSave">Сохранить напоминание</button><div id="miniReminderOut" class="miniOutput"></div></div>';
+    if(id==='emoji')return common+'<div class="miniActions">'+['😎','🚀','🎮','🐱','🐶','✨','🔥','🌈','💻','🎉','🍋','🧠'].map(function(e){return '<button data-emoji="'+e+'">'+e+'</button>';}).join('')+'</div><textarea id="miniEmojiOut" placeholder="Нажимай на эмодзи, чтобы собрать комбинацию"></textarea><button id="miniEmojiClear">Очистить</button></div>';
+    if(id==='converter')return common+'<input id="miniConvertVal" type="number" value="1"><select id="miniConvertType"><option value="km">Километры → метры</option><option value="m">Метры → сантиметры</option><option value="kg">Килограммы → граммы</option><option value="c">°C → °F</option></select><button id="miniConvertBtn">Конвертировать</button><div id="miniConvertOut" class="miniOutput"></div></div>';
+    if(id==='memory')return common+'<p>Запомни последовательность эмодзи, затем повтори её.</p><div id="miniMemoryOut" class="miniOutput miniBig">🟦 🟨 🟩</div><input id="miniMemoryInput" placeholder="Введи последовательность эмодзи"><button id="miniMemoryCheck">Проверить</button><div id="miniMemoryResult" class="miniOutput"></div><button id="miniMemoryNew">Новая последовательность</button></div>';
+    if(id==='snake')return common+'<p>Мини-режим: нажми кнопку, чтобы сделать ход и набрать очки.</p><div id="miniSnakeBoard" class="miniOutput miniBig">🟩⬛⬛🍎</div><button id="miniSnakeMove">➡️ Сделать ход</button><div id="miniSnakeScore" class="miniOutput">Очки: 0</div></div>';
+    if(id==='reaction')return common+'<div id="miniReactionOut" class="miniOutput miniBig">Нажми «Старт»</div><button id="miniReactionStart">Старт</button><button id="miniReactionHit" disabled>⚡ ЖМИ!</button><div id="miniReactionResult" class="miniOutput"></div></div>';
+    if(id==='typing')return common+'<p id="miniTypingPrompt">НикитОС делает код интереснее.</p><textarea id="miniTypingInput" placeholder="Перепечатай предложение"></textarea><button id="miniTypingCheck">Проверить</button><div id="miniTypingOut" class="miniOutput"></div></div>';
+    if(id==='english'||id==='flashcards')return common+'<div id="miniWord" class="miniOutput miniBig">'+(id==='english'?'hello':'Солнце')+'</div><button id="miniWordShow">Показать перевод</button><button id="miniWordNext">Следующая карточка</button><div id="miniWordOut" class="miniOutput"></div></div>';
+    if(id==='quiz'||id==='puzzle')return common+'<div id="miniQuizQuestion" class="miniOutput">Сколько будет 7 × 8?</div><input id="miniQuizAnswer" placeholder="Твой ответ"><button id="miniQuizCheck">Проверить</button><div id="miniQuizOut" class="miniOutput"></div><button id="miniQuizNext">Другой вопрос</button></div>';
+    if(id==='music')return common+'<p>Нажимай ноты, чтобы услышать звук (если браузер поддерживает Web Audio).</p><div class="miniActions">'+[261.63,293.66,329.63,349.23,392,440,493.88].map(function(f,i){return '<button data-tone="'+f+'">'+['До','Ре','Ми','Фа','Соль','Ля','Си'][i]+'</button>';}).join('')+'</div><div class="miniOutput">Локальный генератор тона</div></div>';
+    if(id==='calculator')return common+'<input id="miniCalcA" type="number" placeholder="Первое число"><select id="miniCalcOp"><option>+</option><option>−</option><option>×</option><option>÷</option></select><input id="miniCalcB" type="number" placeholder="Второе число"><button id="miniCalcGo">Посчитать</button><div id="miniCalcOut" class="miniOutput"></div></div>';
+    if(id==='todo'||id==='journal'||id==='markdown'||id==='wiki'||id==='weather')return common+'<p>Твои записи сохраняются в памяти браузера.</p><input id="miniTextTitle" placeholder="Заголовок"><textarea id="miniTextBody" placeholder="Напиши здесь…"></textarea><button id="miniTextSave">💾 Сохранить</button><div id="miniTextStatus" class="miniOutput"></div></div>';
+    if(id==='story')return common+'<div id="miniStoryOut" class="miniOutput">Нажми кнопку, чтобы придумать сюжет.</div><button id="miniStoryBtn">📖 Придумать идею</button></div>';
+    if(id==='breathing')return common+'<div id="miniBreathOut" class="miniOutput miniBig">Готов?</div><button id="miniBreathBtn">Начать спокойную паузу</button></div>';
+    if(id==='pixel')return common+'<p>Нажимай на клетки, чтобы менять цвет.</p><div id="miniPixelGrid" style="display:grid;grid-template-columns:repeat(8,1fr);gap:3px"></div><button id="miniPixelClear">Очистить сетку</button></div>';
+    if(id==='typing')return common+'<p>НикитОС — твоя система.</p><textarea id="miniTypingInput"></textarea><button id="miniTypingCheck">Проверить</button><div id="miniTypingOut"></div></div>';
+    if(id==='pomodoro')return common+'<div class="miniOutput miniBig">25:00</div><p>Сосредоточься на одной задаче. Таймер доступен в приложении.</p></div>';
+    return common+'<div class="miniOutput"><h3>'+a.icon+' '+a.name+'</h3><p>'+a.desc+'</p><p>Мини-приложение открыто и готово к использованию.</p></div><p>Это автономная браузерная версия без регистрации и внешних сервисов.</p></div>';
+  }
+  function wireMiniApp(win,id){var q=function(sel){return win.querySelector(sel);},on=function(sel,ev,fn){var el=q(sel);if(el)el.addEventListener(ev,fn);};if(win.getAttribute('data-wired')==='1')return;win.setAttribute('data-wired','1');
+    if(id==='clicker'){var score=0;on('#miniClick','click',function(){q('#miniScore').textContent=++score;});on('#miniReset','click',function(){score=0;q('#miniScore').textContent='0';});}
+    if(id==='guess'){var secret=1+Math.floor(Math.random()*100);on('#miniGuessBtn','click',function(){var n=Number(q('#miniGuess').value);q('#miniGuessOut').textContent=!n?'Введи число.':n===secret?'🎉 Верно! Новое число можно загадать кнопкой ниже.':n<secret?'Больше! Попробуй ещё.':'Меньше! Попробуй ещё.';});on('#miniGuessReset','click',function(){secret=1+Math.floor(Math.random()*100);q('#miniGuess').value='';q('#miniGuessOut').textContent='Новое число загадано!';});}
+    if(id==='rps'){all('[data-rps]',win).forEach(function(b){b.addEventListener('click',function(){var choices=['Камень','Ножницы','Бумага'],cpu=choices[Math.floor(Math.random()*3)],you=b.getAttribute('data-rps'),res=you===cpu?'Ничья!':((you==='Камень'&&cpu==='Ножницы')||(you==='Ножницы'&&cpu==='Бумага')||(you==='Бумага'&&cpu==='Камень'))?'Ты победил!':'Компьютер победил!';q('#miniRpsOut').textContent='Ты: '+you+' · Компьютер: '+cpu+'. '+res;});});}
+    if(id==='quotes'){var quotes=['Маленькие шаги тоже ведут к большим открытиям.','Любопытство — начало любого изобретения.','Каждая ошибка помогает найти новый путь.','Сегодня — отличный день, чтобы чему-нибудь научиться.'];on('#miniQuoteBtn','click',function(){q('#miniQuote').textContent=quotes[Math.floor(Math.random()*quotes.length)];});}
+    if(id==='color'){on('#miniColor','input',function(){q('#miniColorOut').textContent=q('#miniColor').value.toUpperCase();q('#miniColorOut').style.background=q('#miniColor').value;});on('#miniCopyColor','click',function(){var v=q('#miniColor').value;if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(v).then(function(){toast('HEX скопирован');}).catch(function(){toast(v);});else toast(v);});}
+    if(id==='timer'||id==='pomodoro'){var remain=id==='pomodoro'?1500:60,interval=null;function show(){q('#miniTimerOut').textContent=Math.floor(remain/60).toString().padStart(2,'0')+':'+(remain%60).toString().padStart(2,'0');}show();on('#miniTimerStart','click',function(){if(interval)return;var mins=Number(q('#miniMinutes').value);if(remain<=0||remain===60)remain=Math.max(1,Math.min(180,mins||1))*60;interval=setInterval(function(){remain--;show();if(remain<=0){clearInterval(interval);interval=null;toast('⏱️ Время вышло!');}},1000);});on('#miniTimerStop','click',function(){clearInterval(interval);interval=null;});on('#miniTimerReset','click',function(){clearInterval(interval);interval=null;remain=Math.max(1,Math.min(180,Number(q('#miniMinutes').value)||1))*60;show();});}
+    if(id==='pixelclock'){var update=function(){if(q('#miniTimerOut'))q('#miniTimerOut').textContent=new Date().toLocaleTimeString('ru-RU');};update();setInterval(update,1000);}
+    if(id==='mathtrainer'){var a,b;function next(){a=1+Math.floor(Math.random()*12);b=1+Math.floor(Math.random()*12);q('#miniMath').textContent=a+' × '+b+' = ?';q('#miniMathAnswer').value='';q('#miniMathOut').textContent='';}next();on('#miniMathCheck','click',function(){q('#miniMathOut').textContent=Number(q('#miniMathAnswer').value)===a*b?'✅ Правильно!':'Попробуй ещё раз.';});on('#miniMathNext','click',next);}
+    if(id==='random'||id==='fortune'){on('#miniPick','click',function(){var opts=q('#miniOptions').value.split(',').map(function(x){return x.trim();}).filter(Boolean);q('#miniPickOut').textContent=opts.length?opts[Math.floor(Math.random()*opts.length)]:'Сначала введи несколько вариантов через запятую.';});}
+    if(id==='password'){on('#miniPassGen','click',function(){var chars='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%&*';var len=Math.max(8,Math.min(40,Number(q('#miniPassLen').value)||16)),out='';for(var i=0;i<len;i++)out+=chars[Math.floor(Math.random()*chars.length)];q('#miniPassOut').textContent=out;});}
+    if(id==='counter'){var count=0;function upd(){q('#miniCount').textContent=count;}on('#miniPlus','click',function(){count++;upd();});on('#miniMinus','click',function(){count--;upd();});on('#miniCountReset','click',function(){count=0;upd();});}
+    if(id==='draw'){var c=q('#miniCanvas'),ctx=c.getContext('2d'),drawing=false;ctx.lineWidth=4;ctx.lineCap='round';function point(e){var r=c.getBoundingClientRect();return {x:(e.clientX-r.left)*c.width/r.width,y:(e.clientY-r.top)*c.height/r.height};}c.addEventListener('pointerdown',function(e){drawing=true;var p=point(e);ctx.beginPath();ctx.moveTo(p.x,p.y);c.setPointerCapture(e.pointerId);});c.addEventListener('pointermove',function(e){if(!drawing)return;var p=point(e);ctx.strokeStyle=q('#miniBrush').value;ctx.lineTo(p.x,p.y);ctx.stroke();});['pointerup','pointercancel','lostpointercapture'].forEach(function(ev){c.addEventListener(ev,function(){drawing=false;});});on('#miniClearCanvas','click',function(){ctx.clearRect(0,0,c.width,c.height);});}
+    if(id==='webnotes'){var urls=[];function render(){q('#miniUrlList').textContent='';urls.forEach(function(u){var a=document.createElement('a');a.href=u.url;a.target='_blank';a.rel='noopener noreferrer';a.textContent=u.name+' — '+u.url;a.style.display='block';a.style.margin='6px';q('#miniUrlList').appendChild(a);});}on('#miniUrlAdd','click',function(){var url=q('#miniUrl').value.trim();if(!/^https?:\/\//i.test(url)){toast('Ссылка должна начинаться с http:// или https://');return;}urls.push({name:q('#miniUrlName').value.trim()||url,url:url});render();});}
+    if(id==='calendar'){q('#miniCalendarDate').textContent=new Date().toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long',year:'numeric'});on('#miniReminderSave','click',function(){q('#miniReminderOut').textContent='Напоминание: '+q('#miniReminder').value;});}
+    if(id==='emoji'){all('[data-emoji]',win).forEach(function(b){b.addEventListener('click',function(){q('#miniEmojiOut').value+=b.getAttribute('data-emoji');});});on('#miniEmojiClear','click',function(){q('#miniEmojiOut').value='';});}
+    if(id==='converter'){on('#miniConvertBtn','click',function(){var v=Number(q('#miniConvertVal').value),t=q('#miniConvertType').value,r=t==='km'?v*1000:t==='m'?v*100:t==='kg'?v*1000:v*9/5+32;q('#miniConvertOut').textContent=r+' '+(t==='km'?'м':t==='m'?'см':t==='kg'?'г':'°F');});}
+    if(id==='memory'){var seq='🟦 🟨 🟩';on('#miniMemoryCheck','click',function(){q('#miniMemoryResult').textContent=q('#miniMemoryInput').value.replace(/\s/g,'')===seq.replace(/\s/g,'')?'Верно!':'Не совсем. Попробуй запомнить: '+seq;});on('#miniMemoryNew','click',function(){var em=['🟦','🟨','🟩','🟥','🟪','⬜'];seq=[0,1,2].map(function(){return em[Math.floor(Math.random()*em.length)];}).join(' ');q('#miniMemoryOut').textContent=seq;q('#miniMemoryInput').value='';});}
+    if(id==='snake'){var sc=0;on('#miniSnakeMove','click',function(){sc+=Math.floor(Math.random()*3)+1;q('#miniSnakeScore').textContent='Очки: '+sc;q('#miniSnakeBoard').textContent='⬛'.repeat(Math.min(10,Math.floor(sc/2)))+'🟩🍎';});}
+    if(id==='reaction'){var timeout=null,startAt=0;on('#miniReactionStart','click',function(){q('#miniReactionOut').textContent='Жди зелёный сигнал…';q('#miniReactionHit').disabled=true;clearTimeout(timeout);timeout=setTimeout(function(){startAt=Date.now();q('#miniReactionOut').textContent='🟢 ЖМИ!';q('#miniReactionHit').disabled=false;},1000+Math.random()*2500);});on('#miniReactionHit','click',function(){if(startAt){q('#miniReactionResult').textContent='Твоя реакция: '+(Date.now()-startAt)+' мс';startAt=0;}else q('#miniReactionResult').textContent='Сначала дождись сигнала!';});}
+    if(id==='typing'){var prompt=q('#miniTypingPrompt');on('#miniTypingCheck','click',function(){q('#miniTypingOut').textContent=q('#miniTypingInput').value.trim()===(prompt?prompt.textContent:'НикитОС — твоя система.')?'Отлично, совпадает!':'Проверь текст и попробуй ещё раз.';});}
+    if(id==='english'||id==='flashcards'){var words=id==='english'?[['hello','привет'],['cat','кошка'],['book','книга'],['friend','друг'],['game','игра']]:[['Солнце','Звезда'],['Код','Инструкция для компьютера'],['Алгоритм','Последовательность шагов']];var ix=0;on('#miniWordShow','click',function(){q('#miniWordOut').textContent=words[ix][1];});on('#miniWordNext','click',function(){ix=(ix+1)%words.length;q('#miniWord').textContent=words[ix][0];q('#miniWordOut').textContent='';});}
+    if(id==='quiz'||id==='puzzle'){var qs=[['Сколько будет 7 × 8?','56'],['Сколько будет 100 − 37?','63'],['Какое число идёт после 49?','50'],['Сколько будет 9 + 6?','15']];var qi=0;on('#miniQuizCheck','click',function(){q('#miniQuizOut').textContent=q('#miniQuizAnswer').value.trim()===qs[qi][1]?'✅ Верно!':'Попробуй ещё раз.';});on('#miniQuizNext','click',function(){qi=(qi+1)%qs.length;q('#miniQuizQuestion').textContent=qs[qi][0];q('#miniQuizAnswer').value='';q('#miniQuizOut').textContent='';});}
+    if(id==='music'){all('[data-tone]',win).forEach(function(b){b.addEventListener('click',function(){try{var C=window.AudioContext||window.webkitAudioContext,ctx=new C(),osc=ctx.createOscillator(),gain=ctx.createGain();osc.frequency.value=Number(b.getAttribute('data-tone'));gain.gain.value=.08;osc.connect(gain);gain.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime+.25);osc.onended=function(){ctx.close();};}catch(e){toast('Звук не поддерживается этим браузером');}});});}
+    if(id==='calculator'){on('#miniCalcGo','click',function(){var a=Number(q('#miniCalcA').value),b=Number(q('#miniCalcB').value),op=q('#miniCalcOp').value,r=op==='+'?a+b:op==='−'?a-b:op==='×'?a*b:b===0?'На ноль делить нельзя':a/b;q('#miniCalcOut').textContent=r;});}
+    if(['todo','journal','markdown','wiki','weather'].indexOf(id)!==-1){var key='nikitos-mini-'+id;try{var saved=JSON.parse(localStorage.getItem(key)||'null');if(saved){q('#miniTextTitle').value=saved.title||'';q('#miniTextBody').value=saved.body||'';}}catch(e){}on('#miniTextSave','click',function(){try{localStorage.setItem(key,JSON.stringify({title:q('#miniTextTitle').value,body:q('#miniTextBody').value}));q('#miniTextStatus').textContent='Сохранено в браузере.';}catch(e){q('#miniTextStatus').textContent='Не удалось сохранить.';}});}
+    if(id==='story'){var bits=['робот, который мечтал рисовать','секретная дверь в школьной библиотеке','кот, ставший капитаном космического корабля','город, где все дома были сделаны из стекла','изобретатель, случайно создавший машину времени'];on('#miniStoryBtn','click',function(){q('#miniStoryOut').textContent='Однажды герой обнаружил '+bits[Math.floor(Math.random()*bits.length)]+'. Что случится дальше — решаешь ты!';});}
+    if(id==='breathing'){var steps=['Вдохни спокойно…','Медленно выдохни…','Расслабь плечи…','Отлично. Пауза завершена.'];on('#miniBreathBtn','click',function(){var i=0;q('#miniBreathOut').textContent=steps[i];var timer=setInterval(function(){i++;if(i>=steps.length){clearInterval(timer);return;}q('#miniBreathOut').textContent=steps[i];},2500);});}
+    if(id==='pixel'){var g=q('#miniPixelGrid');for(var i=0;i<64;i++){var cell=document.createElement('button');cell.style.padding='0';cell.style.aspectRatio='1';cell.style.background='#ffffff';cell.setAttribute('aria-label','Пиксель '+(i+1));cell.addEventListener('click',function(){this.style.background=this.style.background==='rgb(255, 255, 255)'?'#7c3aed':'#ffffff';});g.appendChild(cell);}on('#miniPixelClear','click',function(){all('button',g).forEach(function(c){c.style.background='#ffffff';});});}
+  }
+
+  function isBackupKey(key){return /^nikitos-(theme|notes|tasks|virtual-files|installed-apps|mini-[a-z0-9_-]+)$/i.test(key);}
+  function collectBackupData(){var data={};for(var i=0;i<localStorage.length;i++){var key=localStorage.key(i);if(key&&isBackupKey(key)){var value=localStorage.getItem(key);if(typeof value==='string')data[key]=value;}}return data;}
+  function downloadBackup(){
+    try{
+      var backup={format:'NikitOS-backup',schemaVersion:1,appVersion:'1.6.1',createdAt:new Date().toISOString(),data:collectBackupData()};
+      var json=JSON.stringify(backup,null,2),blob=new Blob([json],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+      var day=new Date().toISOString().slice(0,10);a.href=url;a.download='NikitOS-backup-'+day+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url);},1200);
+      one('#backupStatus').textContent='Копия подготовлена · '+Object.keys(backup.data).length+' элементов хранения.';toast('Резервная копия JSON подготовлена');
+    }catch(err){one('#backupStatus').textContent='Не удалось создать копию. Проверь, разрешает ли браузер доступ к сохранённым данным.';toast('Ошибка создания резервной копии');}
+  }
+  function validateBackup(backup){
+    // Совместимость: формат 1.5.1/1.5.2 (NikitOSBackup + schema)
+    // и формат 1.6+ (NikitOS-backup + schemaVersion).
+    var supportedFormat=backup&&(
+      (backup.format==='NikitOS-backup'&&backup.schemaVersion===1)||
+      (backup.format==='NikitOSBackup'&&backup.schema===1)||
+      (backup.format==='NikitOSBackup'&&backup.schemaVersion===1)||
+      (backup.format==='NikitOS-backup'&&backup.schema===1)
+    );
+    if(!backup||typeof backup!=='object'||!supportedFormat||!backup.data||typeof backup.data!=='object'||Array.isArray(backup.data))throw Error('Файл не похож на резервную копию НикитОС или его версия не поддерживается.');
+    var keys=Object.keys(backup.data),total=0;if(keys.length>500)throw Error('В копии слишком много элементов.');
+    keys.forEach(function(key){var value=backup.data[key];if(!isBackupKey(key)||typeof value!=='string')throw Error('В копии обнаружены неподдерживаемые данные.');total+=key.length+value.length;if(total>2000000)throw Error('Размер данных в копии превышает 2 МБ.');});
+    if(Object.prototype.hasOwnProperty.call(backup.data,'nikitos-theme')&&['default','light','sunset'].indexOf(backup.data['nikitos-theme'])===-1)throw Error('В копии указана неизвестная тема.');
+    if(backup.data['nikitos-tasks']!==undefined){var tasksData=JSON.parse(backup.data['nikitos-tasks']);if(!Array.isArray(tasksData)||tasksData.length>5000||tasksData.some(function(t){return !t||typeof t.text!=='string';}))throw Error('Список задач в копии повреждён.');}
+    if(backup.data['nikitos-virtual-files']!==undefined){var filesData=JSON.parse(backup.data['nikitos-virtual-files']);if(!Array.isArray(filesData)||filesData.length>5000||filesData.some(function(f){return !f||typeof f.id!=='string'||typeof f.name!=='string'||(f.type!=='folder'&&f.type!=='text')||(f.type==='text'&&f.content!==undefined&&typeof f.content!=='string');}))throw Error('Список виртуальных файлов в копии повреждён.');}
+    if(backup.data['nikitos-installed-apps']!==undefined){var appsData=JSON.parse(backup.data['nikitos-installed-apps']);if(!Array.isArray(appsData)||appsData.length>500||appsData.some(function(id){return typeof id!=='string';}))throw Error('Список установленных приложений в копии повреждён.');}
+    return {data:backup.data,count:keys.length};
+  }
+  function restoreBackupText(textValue){
+    var parsed;try{parsed=JSON.parse(textValue);}catch(err){throw Error('Не удалось прочитать JSON. Проверь файл.');}
+    var checked=validateBackup(parsed);
+    if(!window.confirm('Восстановить резервную копию? Текущие сохранённые данные НикитОС будут заменены данными из файла.'))return false;
+    var before={},keys=[];
+    try{
+      for(var i=0;i<localStorage.length;i++){var currentKey=localStorage.key(i);if(currentKey&&isBackupKey(currentKey)){keys.push(currentKey);before[currentKey]=localStorage.getItem(currentKey);}}
+      keys.forEach(function(key){localStorage.removeItem(key);});
+      Object.keys(checked.data).forEach(function(key){localStorage.setItem(key,checked.data[key]);});
+    }catch(err){
+      try{var nowKeys=[];for(var j=0;j<localStorage.length;j++){var k=localStorage.key(j);if(k&&isBackupKey(k))nowKeys.push(k);}nowKeys.forEach(function(k){localStorage.removeItem(k);});Object.keys(before).forEach(function(k){localStorage.setItem(k,before[k]);});}catch(rollbackErr){}
+      throw Error('Не удалось применить копию. Система попыталась вернуть прежние данные. Возможно, в браузере не хватает места.');
+    }
+    one('#backupStatus').textContent='Копия восстановлена. Перезапуск НикитОС…';toast('Данные восстановлены — перезапускаю систему');setTimeout(function(){window.location.reload();},650);return true;
+  }
+  function readBackupFile(file){
+    if(!file)return;if(file.size>2100000){one('#backupStatus').textContent='Файл слишком большой (максимум 2,1 МБ).';toast('Файл резервной копии слишком большой');return;}
+    var reader=new FileReader();reader.onload=function(){try{var done=restoreBackupText(String(reader.result||''));if(done)one('#backupStatus').textContent='Копия восстановлена. Перезапуск…';else one('#backupStatus').textContent='Восстановление отменено.';}catch(err){one('#backupStatus').textContent=err.message||'Ошибка восстановления.';toast(err.message||'Ошибка восстановления');}};reader.onerror=function(){one('#backupStatus').textContent='Не удалось прочитать выбранный файл.';toast('Ошибка чтения файла');};reader.readAsText(file);
+  }
+
+  function handleButton(btn){
+    if(btn.hasAttribute('data-catalog-launch')){launchCatalogApp(btn.getAttribute('data-catalog-launch'));return;}
+    if(btn.hasAttribute('data-open')){openApp(btn.getAttribute('data-open'));return;}
+    if(btn.hasAttribute('data-theme')){setTheme(btn.getAttribute('data-theme'));return;}
+    if(btn.hasAttribute('data-calc')){calcPress(btn.getAttribute('data-calc'));return;}
+    if(btn.id==='startBtn'){quickPanel.classList.remove('open');startMenu.classList.toggle('open');return;}
+    if(btn.id==='quickBtn'){startMenu.classList.remove('open');quickPanel.classList.toggle('open');return;}
+    if(btn.classList.contains('closeBtn')||btn.classList.contains('minBtn')){var win=btn.closest('.window');if(win)win.classList.remove('active');return;}
+    if(btn.id==='soundBtn'){soundOn=!soundOn;btn.textContent=soundOn?'🔔 Звук: вкл.':'🔔 Звук: выкл.';toast(soundOn?'Звук включён':'Звук выключен');return;}
+    if(btn.id==='fullscreenBtn'){if(!document.fullscreenElement&&document.documentElement.requestFullscreen){var p=document.documentElement.requestFullscreen();if(p&&p.catch)p.catch(function(){toast('Полный экран недоступен');});}else if(document.exitFullscreen){var q=document.exitFullscreen();if(q&&q.catch)q.catch(function(){});}else toast('Полный экран недоступен');return;}
+    if(btn.id==='saveNote'){saveNotes();toast('Заметка сохранена');return;}
+    if(btn.id==='clearNote'){if(window.confirm('Очистить заметку?')){one('#notesText').value='';saveNotes();toast('Заметка очищена');}return;}
+    if(btn.id==='pickFile'){one('#fileInput').click();return;}
+    if(btn.id==='newFolderBtn'){createVirtualItem('folder');return;}
+    if(btn.id==='newTextBtn'){createVirtualItem('text');return;}
+    if(btn.id==='filesUpBtn'){if(currentFolderId!==null){var cf=virtualFiles.find(function(f){return f.id===currentFolderId;});currentFolderId=cf?(cf.parentId||null):null;one('#filesSearch').value='';renderVirtualFiles();}else toast('Ты уже в корневой папке');return;}
+    if(btn.id==='saveVirtualFile'){saveVirtualFile();return;}
+    if(btn.id==='cancelVirtualFile'){one('#fileEditor').style.display='none';editingFileId=null;return;}
+    if(btn.id==='downloadVirtualFile'){downloadVirtualFile();return;}
+    if(btn.hasAttribute('data-file-action')){fileAction(btn);return;}
+    if(btn.id==='exportNotes'){downloadNotes();return;}
+    if(btn.id==='exportBackup'){downloadBackup();return;}
+    if(btn.id==='importBackup'){one('#backupInput').click();return;}
+    if(btn.id==='resetLayout'){all('.window').forEach(function(w){w.classList.remove('active');w.style.left='50%';w.style.top='48%';w.style.transform='translate(-50%,-50%)';});closePanels();toast('Рабочий стол сброшен');return;}
+    if(btn.getAttribute('data-action')==='power'){one('#powerOverlay').classList.add('show');closePanels();return;}
+    if(btn.id==='wakeBtn'){one('#powerOverlay').classList.remove('show');return;}
+    if(btn.id==='clearDoneTasks'){var old=tasks.length;tasks=tasks.filter(function(t){return !t.done;});persistTasks();renderTasks();toast(old===tasks.length?'Нет выполненных задач':'Выполненные задачи удалены');return;}
+  }
+  // Direct listeners avoid relying on event bubbling for the main controls.
+  all('button').forEach(function(btn){btn.addEventListener('click',function(){handleButton(btn);});});
+  one('#appGrid').addEventListener('click',function(e){var b=e.target.closest('[data-catalog-launch]');if(b)launchCatalogApp(b.getAttribute('data-catalog-launch'));});
+  one('#storeSearch').addEventListener('input',renderStore);one('#storeSort').addEventListener('change',renderStore);
+  one('#storeCategories').addEventListener('click',function(e){var b=e.target.closest('[data-category]');if(!b)return;activeStoreCategory=b.getAttribute('data-category');all('.storeCat').forEach(function(c){c.classList.toggle('selected',c===b);});renderStore();});
+  one('#storeGrid').addEventListener('click',function(e){var b=e.target.closest('[data-store-action]');if(!b)return;var id=b.getAttribute('data-app-id'),action=b.getAttribute('data-store-action');if(action==='install')installCatalogApp(id);else if(action==='remove')removeCatalogApp(id);else if(action==='open')launchCatalogApp(id);});
+  installedApps.forEach(function(id){var a=catalogApps.find(function(x){return x.id===id;});if(a)addInstalledTile(a);});renderStore();
+  one('#taskForm').addEventListener('submit',function(e){e.preventDefault();addTask(one('#taskInput').value);});
+  one('#notesText').addEventListener('input',saveNotes);
+  one('#fileInput').addEventListener('change',function(e){var f=e.target.files&&e.target.files[0];one('#fileInfo').textContent=f?'Выбран: '+f.name+' · '+(f.size/1024).toFixed(1)+' КБ · '+(f.type||'тип не указан'):'Файл устройства ещё не выбран.';});
+  one('#backupInput').addEventListener('change',function(e){var f=e.target.files&&e.target.files[0];if(f)readBackupFile(f);e.target.value='';});
+  one('#filesSearch').addEventListener('input',renderVirtualFiles);
+  one('#virtualFileList').addEventListener('click',function(e){var btn=e.target.closest('[data-file-action]');if(btn)fileAction(btn);});
+  one('#fileEditorText').addEventListener('input',function(){one('#fileEditorStatus').textContent='Есть несохранённые изменения';});
+  one('#appSearch').addEventListener('input',function(e){var q=e.target.value.toLowerCase();all('.appTile').forEach(function(tile){tile.style.display=tile.textContent.toLowerCase().indexOf(q)!==-1?'flex':'none';});});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){closePanels();one('#powerOverlay').classList.remove('show');}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();startMenu.classList.add('open');one('#appSearch').focus();}});
+  // Bring windows to front and allow dragging by the title bar on mouse or touch.
+  all('.window').forEach(function(w){
+    w.addEventListener('pointerdown',function(){w.style.zIndex=String(++zTop);});
+    var bar=one('.titlebar',w),drag=null;
+    if(!bar)return;
+    bar.addEventListener('pointerdown',function(e){
+      if(e.target.closest('button'))return;
+      var rect=w.getBoundingClientRect(),desk=desktop.getBoundingClientRect();
+      drag={id:e.pointerId,startX:e.clientX,startY:e.clientY,left:rect.left-desk.left,top:rect.top-desk.top,width:rect.width,height:rect.height};
+      w.style.transform='none';
+      w.style.left=drag.left+'px';w.style.top=drag.top+'px';
+      try{bar.setPointerCapture(e.pointerId);}catch(err){}
+      e.preventDefault();
+    });
+    bar.addEventListener('pointermove',function(e){
+      if(!drag||drag.id!==e.pointerId)return;
+      var desk=desktop.getBoundingClientRect(),maxLeft=Math.max(0,desk.width-w.offsetWidth),maxTop=Math.max(0,desk.height-w.offsetHeight);
+      var left=drag.left+(e.clientX-drag.startX),top=drag.top+(e.clientY-drag.startY);
+      w.style.left=Math.max(0,Math.min(maxLeft,left))+'px';
+      w.style.top=Math.max(0,Math.min(maxTop,top))+'px';
+    });
+    function stopDrag(e){if(drag&&drag.id===e.pointerId)drag=null;}
+    bar.addEventListener('pointerup',stopDrag);bar.addEventListener('pointercancel',stopDrag);bar.addEventListener('lostpointercapture',function(){drag=null;});
+  });
+  try{var savedTheme=localStorage.getItem('nikitos-theme');if(savedTheme)setTheme(savedTheme,true);}catch(e){}
+  try{one('#notesText').value=localStorage.getItem('nikitos-notes')||'';}catch(e){one('#noteStatus').textContent='Автосохранение недоступно в этом режиме браузера.';}
+  try{var savedTasks=JSON.parse(localStorage.getItem('nikitos-tasks')||'[]');if(Array.isArray(savedTasks))tasks=savedTasks.filter(function(t){return t&&typeof t.text==='string';});}catch(e){tasks=[];}
+  loadVirtualFiles();renderVirtualFiles();renderTasks();clock();setInterval(clock,1000);openApp('home');
+  one('#jsStatus').textContent='JS: работает';
+});
+})();
 </script>
+
+<style id="nikitos-v3-style">
+:root{--v3-accent:#8b9cff}
+#osDashboard{position:absolute;right:22px;top:76px;width:min(310px,30vw);padding:18px;border:1px solid #ffffff22;border-radius:23px;background:linear-gradient(145deg,rgba(17,28,52,.78),rgba(34,42,83,.56));backdrop-filter:blur(25px);box-shadow:0 18px 60px #0003;z-index:2;color:#f8fafc}
+.dashTop{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:9px;letter-spacing:1.3px;color:#b9c6e5}.dashPill{padding:5px 8px;border-radius:99px;background:#8b9cff25;color:#cbd5ff;font-weight:900}.dashGreeting{padding:22px 0 17px}.dashHello{font-size:clamp(24px,3vw,34px);font-weight:800;letter-spacing:-1px}.dashDate{color:#bdc8e0;font-size:12px;margin-top:5px}.dashStats{display:grid;grid-template-columns:1fr 1fr;gap:9px}.dashStats div{padding:12px;border-radius:15px;background:#ffffff0c;border:1px solid #ffffff12}.dashStats b{display:block;font-size:24px}.dashStats span{font-size:11px;color:#b9c6e5}.dashActions{display:grid;gap:7px;margin-top:14px}.dashActions button{text-align:left;background:#ffffff0c;border-color:#ffffff12}.dashTip{font-size:11px;color:#aebde0;margin-top:14px}
+#systemCenterBtn{font-size:19px;min-width:42px;background:linear-gradient(135deg,#6475ee,#9b6bdf);border:0}
+#taskbar{gap:8px}#taskApps button{min-width:39px}
+.window.maximized{left:10px!important;top:10px!important;width:calc(100% - 20px)!important;height:calc(100% - 92px)!important;transform:none!important;border-radius:16px}
+.titlebar .maximizeBtn{font-size:13px;padding:4px 8px}
+#desktop.v3-focus #osDashboard{display:none}#desktop.v3-focus #desktopIcons{opacity:.12;pointer-events:none}
+.v3-center-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.v3-center-grid button{text-align:left;min-height:58px}.v3-shortcuts{padding:12px;border:1px solid var(--line);border-radius:14px;background:#ffffff08;line-height:1.9;font-size:13px}.v3-shortcuts kbd{padding:2px 6px;border:1px solid var(--line);border-radius:6px;background:#0002;font:inherit}
+@media(max-width:760px){#osDashboard{right:12px;top:auto;bottom:84px;width:min(260px,calc(100vw - 150px));padding:12px}.dashTop{font-size:8px}.dashGreeting{padding:12px 0}.dashHello{font-size:22px}.dashStats b{font-size:19px}.dashActions{gap:5px}.dashActions button{font-size:11px;padding:7px 9px}.dashTip{display:none}#desktopIcons{max-width:calc(100vw - 285px)}}
+@media(max-width:480px){#osDashboard{width:calc(100vw - 24px);right:12px;bottom:78px;top:auto}.dashGreeting{padding:10px 0}.dashActions{grid-template-columns:repeat(3,minmax(0,1fr))}.dashActions button{font-size:10px;text-align:center;padding:8px 4px}.dashStats{display:none}#desktopIcons{display:none}}
+#desktop.light #osDashboard{background:linear-gradient(145deg,rgba(255,255,255,.86),rgba(226,232,255,.78));color:#172033;border-color:#33415522}#desktop.light .dashDate,#desktop.light .dashStats span,#desktop.light .dashTop,#desktop.light .dashTip{color:#475569}#desktop.light .dashStats div,#desktop.light .dashActions button{background:#ffffff99;border-color:#33415518}
+</style>
+<script id="nikitos-v3-script">
+(function(){
+'use strict';
+function bootV3(){
+ var $=function(s,r){return (r||document).querySelector(s)},desk=$('#desktop');if(!desk||desk.dataset.v3Ready)return;desk.dataset.v3Ready='1';
+ var now=new Date(),hour=now.getHours(),greeting=hour<6?'Доброй ночи':hour<12?'Доброе утро':hour<18?'Хорошего дня':'Добрый вечер';
+ $('#dashGreeting').textContent=greeting;$('#dashDate').textContent=now.toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long'});
+ function updateStats(){try{var t=JSON.parse(localStorage.getItem('nikitos-tasks')||'[]');$('#dashTasks').textContent=Array.isArray(t)?t.filter(function(x){return x&&!x.done}).length:0;}catch(e){$('#dashTasks').textContent='0'}try{var a=JSON.parse(localStorage.getItem('nikitos-installed-apps')||'[]');$('#dashApps').textContent=Array.isArray(a)?a.length:0;}catch(e){$('#dashApps').textContent='0'}}
+ updateStats();setInterval(updateStats,3000);
+ $('#osDashboard').addEventListener('click',function(e){var b=e.target.closest('[data-open]');if(!b)return;var id=b.getAttribute('data-open');var target=$('#win-'+id);if(target){document.querySelectorAll('.window').forEach(function(w){w.classList.remove('active')});target.classList.add('active');target.style.zIndex='998'}else{var app=document.querySelector('[data-open="'+id+'"]');if(app)app.click()}});
+ // System center is a real built-in window, separate from the app catalogue.
+ var center=document.createElement('section');center.className='window';center.id='win-system-center';center.innerHTML='<div class="titlebar"><span>◈ Центр системы 3.0</span><div class="titleBtns"><button class="minBtn" aria-label="Свернуть">—</button><button class="maximizeBtn" aria-label="Развернуть">□</button><button class="close closeBtn" aria-label="Закрыть">×</button></div></div><div class="winBody"><div class="hero"><div class="muted">NIKITOS CONTROL CENTER</div><h2>Всё под контролем</h2><p class="muted">Быстрый доступ к основным разделам и функциям системы.</p></div><div class="v3-center-grid"><button data-open="files">📁 Файловый менеджер</button><button data-open="notes">📝 Заметки</button><button data-open="tasks">✅ Планировщик</button><button data-open="store">🛍️ Магазин приложений</button><button data-open="settings">⚙️ Персонализация</button><button data-open="about">💡 О системе</button></div><h3>⌨️ Горячие клавиши</h3><div class="v3-shortcuts"><div><kbd>Ctrl</kbd> + <kbd>K</kbd> — открыть меню «Пуск»</div><div><kbd>Esc</kbd> — закрыть панели</div><div><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd> — полноэкранный режим</div><div><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd> — центр системы</div></div><p class="muted">Версия 3.0 · данные остаются в браузере на этом устройстве.</p></div>';
+ desk.appendChild(center);
+ $('#systemCenterBtn').addEventListener('click',function(){if(typeof window.openApp==='function'){/* legacy app launcher is scoped; activate directly */}document.querySelectorAll('.window').forEach(function(w){w.classList.remove('active')});center.classList.add('active');center.style.zIndex='999';});
+ center.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;if(b.classList.contains('closeBtn')||b.classList.contains('minBtn')){center.classList.remove('active');return}if(b.classList.contains('maximizeBtn')){center.classList.toggle('maximized');b.textContent=center.classList.contains('maximized')?'❐':'□';return}var id=b.getAttribute('data-open');if(id){center.classList.remove('active');var target=$('#win-'+id);if(target){document.querySelectorAll('.window').forEach(function(w){w.classList.remove('active')});target.classList.add('active');target.style.zIndex='998'}else{var app=document.querySelector('[data-open="'+id+'"]');if(app)app.click()}}});
+ // Add maximize controls to all existing windows; double-tap title bars works on touch too.
+ document.querySelectorAll('.window').forEach(function(w){var bar=$('.titlebar',w);if(!bar||bar.querySelector('.maximizeBtn'))return;var controls=$('.titleBtns',bar);if(!controls)return;var btn=document.createElement('button');btn.className='maximizeBtn';btn.type='button';btn.textContent='□';btn.title='Развернуть / восстановить';btn.addEventListener('click',function(e){e.stopPropagation();w.classList.toggle('maximized');btn.textContent=w.classList.contains('maximized')?'❐':'□'});controls.insertBefore(btn,controls.lastElementChild);});
+ document.addEventListener('keydown',function(e){if(e.ctrlKey&&e.shiftKey&&e.key.toLowerCase()==='o'){e.preventDefault();$('#systemCenterBtn').click()}if(e.ctrlKey&&e.shiftKey&&e.key.toLowerCase()==='f'){e.preventDefault();var b=$('#fullscreenBtn');if(b)b.click()}});
+ // Small release note in the About app.
+ var about=$('#win-about .winBody');if(about){var note=document.createElement('div');note.className='hero';note.innerHTML='<h2>✨ Что нового в 3.0</h2><ul><li>Новая панель обзора рабочего стола</li><li>Центр системы с быстрыми переходами</li><li>Разворачивание окон на весь рабочий экран</li><li>Обновлённый брендинг и адаптация для телефона</li><li>Сохранены приложения, магазин и формат резервных копий 1.6</li></ul>';about.insertBefore(note,about.firstChild)}
+ var js=$('#jsStatus');if(js)js.textContent='3.0 · готова';
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bootV3,{once:true});else bootV3();
+})();
+</script>
+
 </body>
 </html>
